@@ -4,6 +4,8 @@ import { ConfigModule } from 'nestjs-dotenv';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { TasksModule } from './Tasks/Tasks.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { UsersModule } from './users/users.module';
       'mongodb+srv://Admin:Admin@productively.snxdm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
     ),
     UsersModule,
+    AuthModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [AppService],

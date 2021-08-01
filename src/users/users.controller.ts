@@ -1,4 +1,15 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/auth/jwt-guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -38,5 +49,11 @@ export class UsersController {
       createUserDto.password,
       createUserDto.name,
     );
+  }
+
+  @Post('test')
+  @UseGuards(AuthGuard())
+  test(@Req() req) {
+    console.log('from test api', req.user);
   }
 }
