@@ -19,6 +19,11 @@ export class UsersService {
     return await this.usersRepository.findOne({ userId });
   }
 
+  // to get user by id
+  async getUserByEmail(email: string): Promise<User> {
+    return await this.usersRepository.findOne({ email });
+  }
+
   // to get all the users in the database
   async getUsers(): Promise<User[]> {
     return this.usersRepository.find({});
@@ -59,16 +64,18 @@ export class UsersService {
   ): Promise<LoginResponse | ErrorResponse> {
     // getting the user
     const user = await this.usersRepository.findOne({ email });
+    console.log(user);
     if (user) {
       // if correct password
       // creating payload
       const payload = {
+        Id: user.userId,
         name: user.name,
         email: user.email,
       };
       // generating accessToken
       const accessToken = await this.jwtService.sign(payload, {
-        secret: 'zxa234s31s434m3uasdasdasda3b463bn383342',
+        secret: process.env.jwtSecret,
         expiresIn: '120d',
       });
 
