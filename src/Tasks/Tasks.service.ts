@@ -9,6 +9,16 @@ export class TasksService {
   constructor(private readonly taskGroupRepository: TaskGroupRepository) {}
 
   /**
+   * Function that returns all the task groups of a user
+   * @author   Pratik Tiwari
+   * @param    {user} userId contains object id of the user
+   * @return   {TaskGroup} returns all the task group of the user
+   */
+  async getTaskGroup(user: string) {
+    return await this.taskGroupRepository.find({ user });
+  }
+
+  /**
    * Function that creates a new task group
    * @author   Pratik Tiwari
    * @param    {user} userId contains object id of the user
@@ -86,15 +96,5 @@ export class TasksService {
    */
   async deleteTask(user: string, taskGroupId: string, taskId: string) {
     return await this.taskGroupRepository.deleteTask(user, taskGroupId, taskId);
-  }
-
-  /**
-   * Function that returns all the task groups of a user
-   * @author   Pratik Tiwari
-   * @param    {user} userId contains object id of the user
-   * @return   {TaskGroup} returns all the task group of the user
-   */
-  async getTaskGroup(user: string) {
-    return await this.taskGroupRepository.find({ user });
   }
 }
