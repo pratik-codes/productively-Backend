@@ -49,9 +49,9 @@ export class TaskGroupRepository {
       groupName: taskGroup.groupName,
       groupDescription: taskGroup.groupDescription,
     };
-    const newUser = new this.taskGroupModel(taskData);
+    const newTask = new this.taskGroupModel(taskData);
     try {
-      newUser.save();
+      newTask.save();
       return { statusCode: 201, message: 'taskgroup created' };
     } catch (error) {
       return error;
@@ -71,13 +71,12 @@ export class TaskGroupRepository {
     taskGroupId: string,
     updateTaskData: Task,
   ): Promise<BasicResponse> {
-    const userData = await this.taskGroupModel.findOne({ _id: taskGroupId });
-    if (!userData) throw new NotFoundException();
-    if (userData.user === user) throw new UnauthorizedException();
-    console.log(updateTaskData);
-    userData.Tasks.push(updateTaskData);
+    const taskData = await this.taskGroupModel.findOne({ _id: taskGroupId });
+    if (!taskData) throw new NotFoundException();
+    if (taskData.user === user) throw new UnauthorizedException();
+    taskData.Tasks.push(updateTaskData);
     try {
-      userData.save();
+      taskData.save();
       return { statusCode: 201, message: 'tasks were successfully added' };
     } catch (error) {
       return error;
@@ -97,13 +96,13 @@ export class TaskGroupRepository {
     taskGroupId: string,
     updateTaskDetailsDto: UpdateTaskDetailsDto,
   ): Promise<BasicResponse> {
-    const userData = await this.taskGroupModel.findOne({ _id: taskGroupId });
-    if (!userData) throw new NotFoundException();
-    if (userData.user === user) throw new UnauthorizedException();
-    userData.groupName = updateTaskDetailsDto.groupName;
-    userData.groupDescription = updateTaskDetailsDto.groupDescription;
+    const taskData = await this.taskGroupModel.findOne({ _id: taskGroupId });
+    if (!taskData) throw new NotFoundException();
+    if (taskData.user === user) throw new UnauthorizedException();
+    taskData.groupName = updateTaskDetailsDto.groupName;
+    taskData.groupDescription = updateTaskDetailsDto.groupDescription;
     try {
-      userData.save();
+      taskData.save();
       return { statusCode: 201, message: 'tasks were successfully added' };
     } catch (error) {
       return error;
@@ -121,9 +120,9 @@ export class TaskGroupRepository {
     user: string,
     taskGroupId: string,
   ): Promise<BasicResponse> {
-    const userData = await this.taskGroupModel.findOne({ _id: taskGroupId });
-    if (!userData) throw new NotFoundException();
-    if (userData.user === user) throw new UnauthorizedException();
+    const taskData = await this.taskGroupModel.findOne({ _id: taskGroupId });
+    if (!taskData) throw new NotFoundException();
+    if (taskData.user === user) throw new UnauthorizedException();
     try {
       await this.taskGroupModel.deleteOne({ _id: taskGroupId });
       return { statusCode: 200, message: 'taskgroup deleted successfully' };
@@ -145,16 +144,16 @@ export class TaskGroupRepository {
     taskGroupId: string,
     taskId: string,
   ): Promise<BasicResponse> {
-    const userData = await this.taskGroupModel.findOne({ _id: taskGroupId });
-    if (!userData) throw new NotFoundException();
-    if (userData.user === user) throw new UnauthorizedException();
-    const Alltasks = userData.Tasks;
+    const taskData = await this.taskGroupModel.findOne({ _id: taskGroupId });
+    if (!taskData) throw new NotFoundException();
+    if (taskData.user === user) throw new UnauthorizedException();
+    const Alltasks = taskData.Tasks;
     const filteredTasks = Alltasks.filter(task => {
       return task.taskId !== taskId;
     });
-    userData.Tasks = filteredTasks;
+    taskData.Tasks = filteredTasks;
     try {
-      userData.save();
+      taskData.save();
       return { statusCode: 200, message: 'taskgroup deleted successfully' };
     } catch (error) {
       return error;
