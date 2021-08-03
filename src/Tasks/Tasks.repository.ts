@@ -74,7 +74,6 @@ export class TaskGroupRepository {
     const taskData = await this.taskGroupModel.findOne({ _id: taskGroupId });
     if (!taskData) throw new NotFoundException();
     if (taskData.user === user) throw new UnauthorizedException();
-    console.log(updateTaskData);
     taskData.Tasks.push(updateTaskData);
     try {
       taskData.save();

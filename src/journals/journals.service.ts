@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AddJournalDto } from './dtos/AddJournal.dto';
 import { JournalGroupDto } from './dtos/journalGroup.dto';
 import { UpdateJournalDetailsDto } from './dtos/updateJournalGroup.dto';
 import { journalGroupRepository } from './journals.repository';
@@ -48,6 +49,57 @@ export class JournalsService {
       user,
       journalGroupId,
       updateTaskDetailsDto,
+    );
+  }
+
+  /**
+   * Function that adds a journal to a journal group
+   * @author   Pratik Tiwari
+   * @param    {user} userId contains object id of the user
+   * @param    {journalGroupId} string contains id of the journal group that the journal needs to be added to
+   * @param    {addJournalsDto} AddJournalDto contains data of the journals that needs to be added
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async AddJournals(
+    user: string,
+    journalGroupId: string,
+    addJournalsDto: AddJournalDto,
+  ) {
+    console.log(journalGroupId);
+    return await this.journalGroupRepository.addJournals(
+      user,
+      journalGroupId,
+      addJournalsDto,
+    );
+  }
+
+  /**
+   * Function that deletes  a journal group
+   * @author   Pratik Tiwari
+   * @param    {user} userId contains object id of the user
+   * @param    {journalGroupId} string contains id of the journal group that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteJournalGroup(user: string, journalGroupId: string) {
+    return await this.journalGroupRepository.deleteJournalGroup(
+      user,
+      journalGroupId,
+    );
+  }
+
+  /**
+   * Function that delete a journal of a journal group
+   * @author   Pratik Tiwari
+   * @param    {user} userId contains object id of the user
+   * @param    {journalGroupId} string contains id of the journal group that has the journal
+   * @param    {journalId} string contains id of the journal group that contains the journal that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteJournal(user: string, journalGroupId: string, journalId: string) {
+    return await this.journalGroupRepository.deleteJournal(
+      user,
+      journalGroupId,
+      journalId,
     );
   }
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Patch,
   Post,
@@ -8,6 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { AddJournalDto } from './dtos/AddJournal.dto';
 import { JournalGroupDto } from './dtos/journalGroup.dto';
 import { UpdateJournalDetailsDto } from './dtos/updateJournalGroup.dto';
 import { JournalsService } from './journals.service';
@@ -55,7 +57,7 @@ export class JournalsController {
    * @return   {BasicResponse} statusCode and messages
    */
   @Patch('')
-  async updateTaskGroup(
+  async updateJournalGroupDetails(
     @Req() req,
     @Body('JournalGroupId') JournalGroupId: string,
     @Body() updateTaskDetailsDto: UpdateJournalDetailsDto,
@@ -64,6 +66,67 @@ export class JournalsController {
       req.user._id,
       JournalGroupId,
       updateTaskDetailsDto,
+    );
+  }
+
+  /**
+   * Function that adds a journal to a journal group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {journalGroupId} string contains id of the journal group that the journal needs to be added to
+   * @param    {addJournalsDto} AddJournalDto contains data of the journals that needs to be added
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Patch('journal')
+  async AddJournals(
+    @Req() req,
+    @Body('JournalGroupId') JournalGroupId: string,
+    @Body('addJournalsDto') addJournalsDto: AddJournalDto,
+  ) {
+    return await this.journalService.AddJournals(
+      req.user._id,
+      JournalGroupId,
+      addJournalsDto,
+    );
+  }
+
+  /**
+   * Function that delete a journal group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {journalGroupId} journalGroupId contains journal group id that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Delete('')
+  async deleteJournalGroup(
+    @Req() req,
+    @Body('journalGroupId') journalGroupId: string,
+  ) {
+    return await this.journalService.deleteJournalGroup(
+      req.user._id,
+      journalGroupId,
+    );
+  }
+
+  /**
+   * Function that delete a journal group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {journalGroupId} journalGroupId contains journal group id to in which the journal exists
+   * @param    {journalId} journalGroupId contains journal id which is to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Delete('/journal')
+  async deleteJournalsInJournalGroup(
+    @Req() req,
+    @Body('journalGroupId') journalGroupId: string,
+    @Body('journalId') journalId: string,
+  ) {
+    console.log(journalId);
+    return await this.journalService.deleteJournal(
+      req.user._id,
+      journalGroupId,
+      journalId,
     );
   }
 }

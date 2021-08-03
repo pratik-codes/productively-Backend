@@ -1,8 +1,10 @@
 import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { v4 as uuidv4 } from 'uuid';
 import { FilterQuery, Model } from 'mongoose';
 import { BasicResponse } from 'src/Types/TaskGroup.types';
+import { AddJournalDto } from './dtos/AddJournal.dto';
 import { JournalGroupDto } from './dtos/journalGroup.dto';
 import { UpdateJournalDetailsDto } from './dtos/updateJournalGroup.dto';
 import { Journal } from './Schema/Journal.schema';
@@ -67,39 +69,49 @@ export class journalGroupRepository {
     }
   }
 
-  //   /**
-  //    * Function that update a journal group details
-  //    * @author   Pratik Tiwari
-  //    * @param    {user} userId contains object id of the user
-  //    * @param    {JournalGroupId} string contains id of the journal group that needs to be updated
-  //    * @param    {updateJournalDetailsDto} UpdateJournalDetailsDto contains data of the journal group that is to be updated
-  //    * @return   {BasicResponse} statusCode and messages
-  //    */
-  //   async addJournals(
-  //     user: string,
-  //     JournalGroupId: string,
-  //     updateJournalData: Journal,
-  //   ): Promise<BasicResponse> {
-  //     const journalData = await this.journalModel.findOne({
-  //       _id: JournalGroupId,
-  //     });
-  //     if (!journalData) throw new NotFoundException();
-  //     if (journalData.user === user) throw new UnauthorizedException();
-  //     journalData.ans1.push = updateJournalData.ans1;
-  //     try {
-  //       journalData.save();
-  //       return { statusCode: 201, message: 'tasks were successfully added' };
-  //     } catch (error) {
-  //       return error;
-  //     }
-  //   }
-
   /**
    * Function that updates a Journal inside a journal group
    * @author   Pratik Tiwari
    * @param    {user} userId contains object id of the user
    * @param    {JournalGroupId} string contains id of the journal group that needs to be updated
-   * @param    {updateJournalDto} UpdateJournalDto contains data of the journal of the journal group that is to be updated
+   * @param    {addJournalsDto} AddJournalDto contains data of the journal of the journal group that is to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async addJournals(
+    user: string,
+    JournalGroupId: string,
+    addJournalsDto: AddJournalDto,
+  ): Promise<BasicResponse> {
+    const journalData = await this.journalModel.findOne({
+      _id: JournalGroupId,
+    });
+    if (!journalData) throw new NotFoundException();
+    if (journalData.user === user) throw new UnauthorizedException();
+    const AddJournalData = {
+      journalId: uuidv4(),
+      journalName: addJournalsDto.journalName,
+      journalDescription: addJournalsDto.journalDescription,
+      journalDate: addJournalsDto.journalDate,
+      ans1: addJournalsDto.ans1,
+      ans2: addJournalsDto.ans2,
+      ans3: addJournalsDto.ans3,
+      ans4: addJournalsDto.ans4,
+    };
+    journalData.Journals.push(AddJournalData);
+    try {
+      journalData.save();
+      return { statusCode: 201, message: 'tasks were successfully added' };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
+   * Function that update a journal group details
+   * @author   Pratik Tiwari
+   * @param    {user} userId contains object id of the user
+   * @param    {JournalGroupId} string contains id of the journal group that needs to be updated
+   * @param    {updateJournalDetailsDto} UpdateJournalDetailsDto contains data of the journal group that is to be updated
    * @return   {BasicResponse} statusCode and messages
    */
   async updateJournalGroupDetails(
@@ -110,8 +122,6 @@ export class journalGroupRepository {
     const journalData = await this.journalModel.findOne({
       _id: JournalGroupId,
     });
-    console.log(journalData);
-    console.log(JournalGroupId);
     if (!journalData) throw new NotFoundException();
     if (journalData.user === user) throw new UnauthorizedException();
     journalData.groupName = updateTaskDetailsDto.groupName;
@@ -124,54 +134,59 @@ export class journalGroupRepository {
     }
   }
 
-  //   /**
-  //    * Function that deletes  a task group
-  //    * @author   Pratik Tiwari
-  //    * @param    {user} userId contains object id of the user
-  //    * @param    {taskGroupId} string contains id of the task group that needs to be deleted
-  //    * @return   {BasicResponse} statusCode and messages
-  //    */
-  //   async deleteTaskGroup(
-  //     user: string,
-  //     taskGroupId: string,
-  //   ): Promise<BasicResponse> {
-  //     const userData = await this.journalModel.findOne({ _id: taskGroupId });
-  //     if (!userData) throw new NotFoundException();
-  //     if (userData.user === user) throw new UnauthorizedException();
-  //     try {
-  //       await this.journalModel.deleteOne({ _id: taskGroupId });
-  //       return { statusCode: 200, message: 'taskgroup deleted successfully' };
-  //     } catch (error) {
-  //       return error;
-  //     }
-  //   }
+  /**
+   * Function that deletes  a journal group
+   * @author   Pratik Tiwari
+   * @param    {user} userId contains object id of the user
+   * @param    {journalGroupId} string contains id of the journal group that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteJournalGroup(
+    user: string,
+    journalGroupId: string,
+  ): Promise<BasicResponse> {
+    const journalData = await this.journalModel.findOne({
+      _id: journalGroupId,
+    });
+    if (!journalData) throw new NotFoundException();
+    if (journalData.user === user) throw new UnauthorizedException();
+    try {
+      await this.journalModel.deleteOne({ _id: journalGroupId });
+      return { statusCode: 200, message: 'journal group deleted successfully' };
+    } catch (error) {
+      return error;
+    }
+  }
 
-  //   /**
-  //    * Function that delete a task of a task group
-  //    * @author   Pratik Tiwari
-  //    * @param    {user} userId contains object id of the user
-  //    * @param    {taskGroupId} string contains id of the task group that has the task
-  //    * @param    {taskId} string contains id of the task group that needs to be deleted
-  //    * @return   {BasicResponse} statusCode and messages
-  //    */
-  //   async deleteTask(
-  //     user: string,
-  //     taskGroupId: string,
-  //     taskId: string,
-  //   ): Promise<BasicResponse> {
-  //     const userData = await this.journalModel.findOne({ _id: taskGroupId });
-  //     if (!userData) throw new NotFoundException();
-  //     if (userData.user === user) throw new UnauthorizedException();
-  //     const Alltasks = userData.Tasks;
-  //     const filteredTasks = Alltasks.filter(task => {
-  //       return task.taskId !== taskId;
-  //     });
-  //     userData.Tasks = filteredTasks;
-  //     try {
-  //       userData.save();
-  //       return { statusCode: 200, message: 'taskgroup deleted successfully' };
-  //     } catch (error) {
-  //       return error;
-  //     }
-  //   }
+  /**
+   * Function that delete a journal of a journal group
+   * @author   Pratik Tiwari
+   * @param    {user} userId contains object id of the user
+   * @param    {journalGroupId} string contains id of the journal group that has the journal
+   * @param    {journalId} string contains id of the journal group that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteJournal(
+    user: string,
+    journalGroupId: string,
+    journalId: string,
+  ): Promise<BasicResponse> {
+    console.log(journalGroupId, journalId);
+    const journalData = await this.journalModel.findOne({
+      _id: journalGroupId,
+    });
+    if (!journalData) throw new NotFoundException();
+    if (journalData.user === user) throw new UnauthorizedException();
+    const AllJournals = journalData.Journals;
+    const filteredJournals = AllJournals.filter(journal => {
+      return journal.journalId !== journalId;
+    });
+    journalData.Journals = filteredJournals;
+    try {
+      journalData.save();
+      return { statusCode: 200, message: 'journal group deleted successfully' };
+    } catch (error) {
+      return error;
+    }
+  }
 }

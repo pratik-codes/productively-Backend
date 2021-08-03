@@ -15,7 +15,27 @@ export class TasksService {
    * @return   {TaskGroup} returns all the task group of the user
    */
   async getTaskGroup(user: string) {
-    return await this.taskGroupRepository.find({ user });
+    const taskGroups: any = await this.taskGroupRepository.find({ user });
+    const responseTaskGroups = [];
+    taskGroups.map(taskGroup => {
+      const doneTasks = [];
+      const pendingTasks = [];
+      taskGroup.Tasks.map(task => {
+        if (task.tasksStatus === 'PENDING') {
+          pendingTasks.push(task);
+        } else {
+          doneTasks.push(task);
+        }
+      });
+      const TaskGroupObj = {
+        taskGroupId: taskGroup._id,
+        taskGroupName: taskGroup.groupName,
+        taskGroupDescription: taskGroup.groupDescription,
+        tasks: { Pending: pendingTasks, done: doneTasks },
+      };
+      responseTaskGroups.push(TaskGroupObj);
+    });
+    return { statusCode: 200, data: responseTaskGroups };
   }
 
   /**
@@ -91,7 +111,7 @@ export class TasksService {
    * @author   Pratik Tiwari
    * @param    {user} userId contains object id of the user
    * @param    {taskGroupId} string contains id of the task group that has the task
-   * @param    {taskId} string contains id of the task group that needs to be deleted
+   * @param    {taskId} string contains id of the task group that contains the task that needs to be deleted
    * @return   {BasicResponse} statusCode and messages
    */
   async deleteTask(user: string, taskGroupId: string, taskId: string) {
