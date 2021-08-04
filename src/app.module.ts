@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './Tasks/Tasks.module';
 import { JournalsModule } from './journals/journals.module';
+import { FlashcardsModule } from './flashcards/flashcards.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { JournalsModule } from './journals/journals.module';
     AuthModule,
     TasksModule,
     JournalsModule,
+    FlashcardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
