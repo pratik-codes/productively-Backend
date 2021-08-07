@@ -1,7 +1,7 @@
 import { Body, Delete, Get, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { AddFlashCardDto } from './Dtos/addFlashCard.dto';
+import { AddFlashCardDto } from 'src/flashcard/Dtos/addFlashCard.dto';
 import { FlashcardGroupDto } from './Dtos/flashcardgroup.dto';
 import { FlashcardService } from './flashcard.service';
 

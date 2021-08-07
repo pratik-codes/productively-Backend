@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AddFlashCardDto } from './Dtos/addFlashCard.dto';
+import { AddFlashCardDto } from 'src/flashcard/Dtos/addFlashCard.dto';
 import { FlashcardGroupDto } from './Dtos/flashcardgroup.dto';
 import { FlashcardGroupRepository } from './flashcard.repository';
 
