@@ -17,7 +17,15 @@ export class JournalsService {
    * @return   {journalGroup} returns all the journal group of the user
    */
   async getJournalGroup(user: string) {
-    return await this.journalGroupRepository.find({ user });
+    const journalGroups = await this.journalGroupRepository.find({ user });
+    journalGroups.map(JournalGroup => {
+      JournalGroup.Journals.sort(function(a, b) {
+        const dateA: any = new Date(a.journalDate),
+          dateB: any = new Date(b.journalDate);
+        return dateB - dateA;
+      });
+    });
+    return { statusCode: 200, data: journalGroups };
   }
 
   /**
