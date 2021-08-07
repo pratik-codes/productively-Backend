@@ -7,9 +7,9 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './Tasks/Tasks.module';
 import { JournalsModule } from './journals/journals.module';
-import { FlashcardsModule } from './flashcards/flashcards.module';
 import { RemainderModule } from './remainder/remainder.module';
 import { PriorityModule } from './priority/priority.module';
+import { FlashcardModule } from './flashcard/flashcard.module';
 
 @Module({
   imports: [
@@ -21,9 +21,9 @@ import { PriorityModule } from './priority/priority.module';
     AuthModule,
     TasksModule,
     JournalsModule,
-    FlashcardsModule,
     RemainderModule,
     PriorityModule,
+    FlashcardModule,
   ],
   controllers: [AppController],
   providers: [AppService],

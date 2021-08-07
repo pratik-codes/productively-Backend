@@ -1,5 +1,7 @@
 import {
   IsArray,
+  isDate,
+  IsDate,
   IsEmail,
   IsNotEmpty,
   isString,
@@ -11,11 +13,9 @@ export class AddFlashCardDto {
   @IsString()
   flashcardName: string;
 
-  @IsNotEmpty()
   @IsString()
   flashcardDescription: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @IsDate()
   data: string;
 }

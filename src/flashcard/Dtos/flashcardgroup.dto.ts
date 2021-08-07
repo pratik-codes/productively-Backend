@@ -1,15 +1,17 @@
 import {
   IsArray,
+  IsDate,
   IsEmail,
   IsNotEmpty,
   isString,
   IsString,
 } from 'class-validator';
 
-export class UpdateFlashcardDetailsDto {
+export class FlashcardGroupDto {
   @IsNotEmpty()
+  @IsString()
   groupName: string;
 
-  @IsNotEmpty()
+  @IsString()
   groupDescription: string;
 }
