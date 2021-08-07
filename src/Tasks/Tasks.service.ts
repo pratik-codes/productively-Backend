@@ -46,6 +46,8 @@ export class TasksService {
    * @return   {BasicResponse} statusCode and messages
    */
   async createTask(user: string, taskGroupDto: TaskGroupDto) {
+    console.log(taskGroupDto);
+
     return await this.taskGroupRepository.create(user, taskGroupDto);
   }
 

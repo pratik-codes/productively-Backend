@@ -2,11 +2,11 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { IsEmail, IsNotEmpty, IsOptional, Validate } from 'class-validator';
 import { User } from 'src/users/schemas/user.schema';
-import { Task } from './Task.schema';
-export type TaskGroupDocument = TaskGroup & Document;
+import { Flashcard } from './Flashcard.schema';
+export type FlashcardGroupDocument = FlashcardGroup & Document;
 
 @Schema()
-export class TaskGroup {
+export class FlashcardGroup {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   @IsNotEmpty()
   user: string;
@@ -20,7 +20,9 @@ export class TaskGroup {
   groupDescription: string;
 
   @Prop()
-  Tasks: Task[];
+  Flashcards: Flashcard[];
 }
 
-export const TaskGroupSchema = SchemaFactory.createForClass(TaskGroup);
+export const FlashcardGroupSchema = SchemaFactory.createForClass(
+  FlashcardGroup,
+);

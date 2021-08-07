@@ -13,7 +13,6 @@ import { JournalGroup, JournalGroupSchema } from './Schema/Journalgroup.schema';
     MongooseModule.forFeature([
       { name: JournalGroup.name, schema: JournalGroupSchema },
     ]),
-    UsersModule,
   ],
   controllers: [JournalsController],
   providers: [JournalsService, journalGroupRepository],
