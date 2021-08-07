@@ -33,6 +33,7 @@ export class TasksController {
    */
   @Post('')
   async createTaskGroup(@Req() req, @Body() taskGroupDto: TaskGroupDto) {
+    console.log(taskGroupDto);
     return await this.tasksService.createTask(req.user._id, taskGroupDto);
   }
 
