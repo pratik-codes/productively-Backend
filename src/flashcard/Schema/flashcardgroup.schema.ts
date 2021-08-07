@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { IsEmail, IsNotEmpty, IsOptional, Validate } from 'class-validator';
 import { User } from 'src/users/schemas/user.schema';
-import { Flashcard } from './Flashcard.schema';
+import { Flashcard } from './flashcard.schema';
 export type FlashcardGroupDocument = FlashcardGroup & Document;
 
 @Schema()
@@ -20,7 +20,8 @@ export class FlashcardGroup {
   groupDescription: string;
 
   @Prop()
-  Flashcards: Flashcard[];
+  @IsNotEmpty()
+  flashcard: Flashcard[];
 }
 
 export const FlashcardGroupSchema = SchemaFactory.createForClass(
