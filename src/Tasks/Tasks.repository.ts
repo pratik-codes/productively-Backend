@@ -35,7 +35,7 @@ export class TaskGroupRepository {
   async find(usersFilterQuery: FilterQuery<TaskGroup>): Promise<TaskGroup[]> {
     return this.taskGroupModel.find(usersFilterQuery);
   }
-
+  a;
   /**
    * Function that creates a new task group
    * @author   Pratik Tiwari
@@ -50,9 +50,11 @@ export class TaskGroupRepository {
       groupDescription: taskGroup.groupDescription,
     };
     const newTask = new this.taskGroupModel(taskData);
+    console.log(newTask);
+
     try {
       newTask.save();
-      return { statusCode: 201, message: 'taskgroup created' };
+      return { statusCode: 201, message: 'task group created' };
     } catch (error) {
       return error;
     }

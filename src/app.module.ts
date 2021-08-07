@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { TasksModule } from './Tasks/Tasks.module';
 import { JournalsModule } from './journals/journals.module';
 import { FlashcardsModule } from './flashcards/flashcards.module';
+import { RemainderModule } from './remainder/remainder.module';
+import { PriorityModule } from './priority/priority.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { FlashcardsModule } from './flashcards/flashcards.module';
     TasksModule,
     JournalsModule,
     FlashcardsModule,
+    RemainderModule,
+    PriorityModule,
   ],
   controllers: [AppController],
   providers: [AppService],

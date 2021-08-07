@@ -4,6 +4,7 @@ import { FlashcardGroupDto } from './Dtos/flashcardgroup.dto';
 import { AddFlashCardDto } from './Dtos/updateFlashcard.dto';
 import { UpdateFlashcardDetailsDto } from './Dtos/updateFlashcardGroupDetails.dto';
 import { FlashcardGroupRepository } from './flashcards.repository';
+import { FlashcardGroup } from './Schema/Flashcardgroup.schema';
 
 @Injectable()
 export class FlashcardsService {
@@ -18,40 +19,27 @@ export class FlashcardsService {
    * @return   {FlashcardGroup} returns all the FlashCards group of the user
    */
   async getFlashcardGroup(user: string) {
-    const FlashcardGroups: any = await this.FlashcardGroupRepository.find({
+    const FlashcardGroups = await this.FlashcardGroupRepository.find({
       user,
     });
-    const responseFlashcardGroups = [];
-    FlashcardGroups.map(FlashcardGroup => {
-      const doneFlashcards = [];
-      const pendingFlashcards = [];
-      FlashcardGroup.Flashcards.map(FlashCards => {
-        if (FlashCards.FlashcardsStatus === 'PENDING') {
-          pendingFlashcards.push(FlashCards);
-        } else {
-          doneFlashcards.push(FlashCards);
-        }
-      });
-      const FlashcardGroupObj = {
-        FlashcardGroupId: FlashcardGroup._id,
-        FlashcardGroupName: FlashcardGroup.groupName,
-        FlashcardGroupDescription: FlashcardGroup.groupDescription,
-        Flashcards: { Pending: pendingFlashcards, done: doneFlashcards },
-      };
-      responseFlashcardGroups.push(FlashcardGroupObj);
-    });
-    return { statusCode: 200, data: responseFlashcardGroups };
+
+    return { statusCode: 200, data: FlashcardGroups };
   }
 
   /**
-   * Function that creates a new FlashCards group
+   * Function that creates a new task group
    * @author   Pratik Tiwari
    * @param    {user} userId contains object id of the user
-   * @param    {FlashcardGroupDto} FlashcardGroupDto contains data of the FlashCards group that is to be created
+   * @param    {taskGroupDto} TaskGroupDto contains data of the task group that is to be created
    * @return   {BasicResponse} statusCode and messages
    */
-  async createFlashcards(user: string, flashcardGroupDto: FlashcardGroupDto) {
-    // return await this.FlashcardGroupRepository.create(user, flashcardGroupDto);
+  async createFlashCardGroup(
+    user: string,
+    flashcardGroupDto: FlashcardGroupDto,
+  ) {
+    console.log(flashcardGroupDto);
+
+    return await this.FlashcardGroupRepository.create(user, flashcardGroupDto);
   }
 
   /**
@@ -67,40 +55,38 @@ export class FlashcardsService {
     FlashcardGroupId: string,
     updateFlashcardDetailsDto: UpdateFlashcardDetailsDto,
   ) {
-    // return await this.FlashcardGroupRepository.updateFlashcardsGroupDetails(
-    //   user,
-    //   FlashcardGroupId,
-    //   updateFlashcardDetailsDto,
-    // );
+    return await this.FlashcardGroupRepository.updateFlashcardsGroupDetails(
+      user,
+      FlashcardGroupId,
+      updateFlashcardDetailsDto,
+    );
   }
 
-  //   /**
-  //    * Function that updates a Flashcards inside a FlashCards group
-  //    * @author   Pratik Tiwari
-  //    * @param    {user} userId contains object id of the user
-  //    * @param    {FlashcardGroupId} string contains id of the FlashCards group that needs to be updated
-  //    * @param    {updateFlashcardsFlashCardsDto} UpdateFlashcardsFlashCardsDto contains data of the FlashCards of the FlashCards group that is to be updated
-  //    * @return   {BasicResponse} statusCode and messages
-  //    */
-  //   async updateFlashCardsInFlashcardGroup(
-  //     user: string,
-  //     FlashcardGroupId: string,
-  //     addFlashCardDto: AddFlashCardDto,
-  //   ) {
-  //     const FlashcardsData = {
-  //       FlashCardsId: uuidv4(),
-  //       FlashCardsName: addFlashCardDto.Flashcards.FlashCardsName,
-  //       FlashCardsDescription:
-  //         addFlashCardDto.Flashcards.FlashCardsDescription,
-  //       FlashcardsStatus:
-  //         addFlashCardDto.Flashcards.FlashcardsStatus,
-  //     };
-  //     return await this.FlashcardGroupRepository.updateFlashcardsInFlashcardsGroup(
-  //       user,
-  //       FlashcardGroupId,
-  //       FlashcardsData,
-  //     );
-  //   }
+  /**
+   * Function that updates a Flashcards inside a FlashCards group
+   * @author   Pratik Tiwari
+   * @param    {user} userId contains object id of the user
+   * @param    {FlashcardGroupId} string contains id of the FlashCards group that needs to be updated
+   * @param    {updateFlashcardsFlashCardsDto} UpdateFlashcardsFlashCardsDto contains data of the FlashCards of the FlashCards group that is to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async addFlashCard(
+    user: string,
+    FlashcardGroupId: string,
+    addFlashCardDto: AddFlashCardDto,
+  ) {
+    const FlashcardsData = {
+      flashcardId: uuidv4(),
+      flashcardName: addFlashCardDto.flashcardName,
+      flashcardDescription: addFlashCardDto.flashcardDescription,
+      data: addFlashCardDto.data,
+    };
+    return await this.FlashcardGroupRepository.addFlashcard(
+      user,
+      FlashcardGroupId,
+      FlashcardsData,
+    );
+  }
 
   /**
    * Function that deletes  a FlashCards group

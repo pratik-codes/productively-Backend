@@ -25,20 +25,21 @@ export class FlashcardsController {
   }
 
   /**
-   * Function that creates a new Flashcards group
+   * Function that creates a new Flashcard group
    * @author   Pratik Tiwari
    * @param    {Req} request the http request by the clients
-   * @param    {FlashcardsGroupDto} FlashcardsGroupDto contains Flashcards group data
+   * @param    {FlashcardGroupDto} FlashcardGroupDto contains Flashcard group data
    * @return   {BasicResponse} statusCode and messages
    */
   @Post('')
-  async createFlashcardsGroup(
+  async createFlashcardGroup(
     @Req() req,
-    @Body() FlashcardsGroupDto: FlashcardGroupDto,
+    @Body() flashcardGroupDto: FlashcardGroupDto,
   ) {
-    return await this.FlashcardsService.createFlashcards(
+    console.log(flashcardGroupDto);
+    return await this.FlashcardsService.createFlashCardGroup(
       req.user._id,
-      FlashcardsGroupDto,
+      flashcardGroupDto,
     );
   }
 
@@ -63,26 +64,26 @@ export class FlashcardsController {
     );
   }
 
-  //   /**
-  //    * Function that creates a new Flashcards inside a Flashcards group
-  //    * @author   Pratik Tiwari
-  //    * @param    {Req} request the http request by the clients
-  //    * @param    {FlashcardsGroupId} FlashcardsGroupId contains Flashcards group id to which the Flashcards is added to
-  //    * @param    {updateFlashcardsFlashcardsDto} UpdateFlashcardsFlashcardsDto contains Flashcards data that needs to be added
-  //    * @return   {BasicResponse} statusCode and messages
-  //    */
-  //   @Patch('Flashcards')
-  //   async uodateFlashcardsInFlashcardsGroup(
-  //     @Req() req,
-  //     @Body('FlashcardsGroupId') FlashcardsGroupId: string,
-  //     @Body() AddFlashCardDto: AddFlashCardDto,
-  //   ) {
-  //     return await this.FlashcardsService.updateFlashCardsInFlashcardGroup(
-  //       req.user._id,
-  //       FlashcardsGroupId,
-  //       AddFlashCardDto,
-  //     );
-  //   }
+  /**
+   * Function that creates a new Flashcards inside a Flashcards group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {FlashcardsGroupId} FlashcardsGroupId contains Flashcards group id to which the Flashcards is added to
+   * @param    {updateFlashcardsFlashcardsDto} UpdateFlashcardsFlashcardsDto contains Flashcards data that needs to be added
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Patch('Flashcards')
+  async addFlashCard(
+    @Req() req,
+    @Body('FlashcardsGroupId') FlashcardsGroupId: string,
+    @Body() AddFlashCardDto: AddFlashCardDto,
+  ) {
+    return await this.FlashcardsService.addFlashCard(
+      req.user._id,
+      FlashcardsGroupId,
+      AddFlashCardDto,
+    );
+  }
 
   /**
    * Function that delete a Flashcards group

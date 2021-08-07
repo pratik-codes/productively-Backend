@@ -2,25 +2,16 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
 import { IsEmail, IsNotEmpty, IsOptional, Validate } from 'class-validator';
 import { User } from 'src/users/schemas/user.schema';
-import { Task } from './Task.schema';
-export type TaskGroupDocument = TaskGroup & Document;
+export type PriorityDocument = Priority & Document;
 
 @Schema()
-export class TaskGroup {
+export class Priority {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   @IsNotEmpty()
   user: string;
 
   @Prop()
   @IsNotEmpty()
-  groupName: string;
-
-  @Prop()
-  @IsNotEmpty()
-  groupDescription: string;
-
-  @Prop()
-  Tasks: Task[];
+  priority: string;
 }
-
-export const TaskGroupSchema = SchemaFactory.createForClass(TaskGroup);
+export const PrioritySchema = SchemaFactory.createForClass(Priority);

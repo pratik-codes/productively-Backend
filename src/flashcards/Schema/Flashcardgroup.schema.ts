@@ -20,7 +20,6 @@ export class FlashcardGroup {
   groupDescription: string;
 
   @Prop()
-  @IsNotEmpty()
   Flashcards: Flashcard[];
 }
 
