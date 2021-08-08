@@ -1,4 +1,5 @@
 import { Delete, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Param } from '@nestjs/common';
 import { Body } from '@nestjs/common';
 import { Get } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
@@ -86,8 +87,8 @@ export class TasksController {
    * @param    {TaskGroupId} TaskGroupId contains task group id that needs to be deleted
    * @return   {BasicResponse} statusCode and messages
    */
-  @Delete('')
-  async deletetaskGroup(@Req() req, @Body('TaskGroupId') TaskGroupId: string) {
+  @Delete('/:TaskGroupId')
+  async deletetaskGroup(@Req() req, @Param('TaskGroupId') TaskGroupId: string) {
     return await this.tasksService.deleteTaskGroup(req.user._id, TaskGroupId);
   }
 
@@ -99,11 +100,11 @@ export class TasksController {
    * @param    {TaskId} TaskGroupId contains task id which is to be deleted
    * @return   {BasicResponse} statusCode and messages
    */
-  @Delete('/task')
+  @Delete('/task/:TaskGroupId/:TaskId')
   async deletetasksInTaskGroup(
     @Req() req,
-    @Body('TaskGroupId') TaskGroupId: string,
-    @Body('TaskId') TaskId: string,
+    @Param('TaskGroupId') TaskGroupId: string,
+    @Param('TaskId') TaskId: string,
   ) {
     console.log(TaskId);
     return await this.tasksService.deleteTask(
