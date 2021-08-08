@@ -9,7 +9,7 @@ import {
   FlashcardGroupDocument,
 } from './Schema/flashcardgroup.schema';
 import { FlashcardGroupDto } from './Dtos/flashcardgroup.dto';
-import { AddFlashCardDto } from './Dtos/addFlashCard.dto';
+import { AddFlashCardDto } from './Dtos/AddFlashCard.dto';
 
 @Injectable()
 export class FlashcardGroupRepository {

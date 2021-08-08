@@ -1,3 +1,4 @@
+import { Param } from '@nestjs/common';
 import {
   Body,
   Controller,
@@ -97,10 +98,10 @@ export class JournalsController {
    * @param    {journalGroupId} journalGroupId contains journal group id that needs to be deleted
    * @return   {BasicResponse} statusCode and messages
    */
-  @Delete('')
+  @Delete('/:journalGroupId')
   async deleteJournalGroup(
     @Req() req,
-    @Body('journalGroupId') journalGroupId: string,
+    @Param('journalGroupId') journalGroupId: string,
   ) {
     return await this.journalService.deleteJournalGroup(
       req.user._id,
@@ -116,11 +117,11 @@ export class JournalsController {
    * @param    {journalId} journalGroupId contains journal id which is to be deleted
    * @return   {BasicResponse} statusCode and messages
    */
-  @Delete('/journal')
+  @Delete('/journal/:journalGroupId/:journalId')
   async deleteJournalsInJournalGroup(
     @Req() req,
-    @Body('journalGroupId') journalGroupId: string,
-    @Body('journalId') journalId: string,
+    @Param('journalGroupId') journalGroupId: string,
+    @Param('journalId') journalId: string,
   ) {
     console.log(journalId);
     return await this.journalService.deleteJournal(

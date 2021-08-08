@@ -17,7 +17,7 @@ export class RemainderService {
     remainders.sort(function(a, b) {
       const dateA: any = new Date(a.remainderDate),
         dateB: any = new Date(b.remainderDate);
-      return dateB - dateA;
+      return dateA - dateB;
     });
     const upcoming = [];
     const past = [];

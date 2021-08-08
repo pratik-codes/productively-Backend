@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
   Req,
@@ -68,8 +69,8 @@ export class PriorityController {
    * @param    {PriorityId} PriorityId contains Priority  id that needs to be deleted
    * @return   {BasicResponse} statusCode and messages
    */
-  @Delete('')
-  async deletePriority(@Req() req, @Body('PriorityId') PriorityId: string) {
+  @Delete('/:PriorityId')
+  async deletePriority(@Req() req, @Param('PriorityId') PriorityId: string) {
     return await this.priorityService.deletePriority(req.user._id, PriorityId);
   }
 }
