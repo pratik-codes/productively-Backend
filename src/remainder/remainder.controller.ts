@@ -1,3 +1,4 @@
+import { Param } from '@nestjs/common';
 import { Body, Delete, Get, Patch, Post, UseGuards } from '@nestjs/common';
 import { Controller, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -66,8 +67,8 @@ export class RemainderController {
    * @param    {remainderId} remainderId contains Remainder  id that needs to be deleted
    * @return   {BasicResponse} statusCode and messages
    */
-  @Delete('')
-  async deleteRemainder(@Req() req, @Body('remainderId') remainderId: string) {
+  @Delete('/:remainderId')
+  async deleteRemainder(@Req() req, @Param('remainderId') remainderId: string) {
     return await this.remainderService.deleteRemainder(
       req.user._id,
       remainderId,
