@@ -1,4 +1,13 @@
-import { Body, Delete, Get, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AddFlashCardDto } from './Dtos/AddFlashCard.dto';
@@ -88,10 +97,10 @@ export class FlashcardController {
    * @param    {FlashcardGroupId} FlashcardGroupId contains Flashcard group id that needs to be deleted
    * @return   {BasicResponse} statusCode and messages
    */
-  @Delete('')
+  @Delete('/:FlashcardGroupId')
   async deleteFlashcardGroup(
     @Req() req,
-    @Body('FlashcardGroupId') FlashcardGroupId: string,
+    @Param('FlashcardGroupId') FlashcardGroupId: string,
   ) {
     return await this.flashcardService.deleteFlashcardGroup(
       req.user._id,
@@ -107,11 +116,11 @@ export class FlashcardController {
    * @param    {FlashcardId} FlashcardGroupId contains Flashcard id which is to be deleted
    * @return   {BasicResponse} statusCode and messages
    */
-  @Delete('/card')
+  @Delete('/card/:FlashcardGroupId/:FlashcardId')
   async deleteFlashcardsInFlashcardGroup(
     @Req() req,
-    @Body('FlashcardGroupId') FlashcardGroupId: string,
-    @Body('FlashcardId') FlashcardId: string,
+    @Param('FlashcardGroupId') FlashcardGroupId: string,
+    @Param('FlashcardId') FlashcardId: string,
   ) {
     console.log(FlashcardId);
     return await this.flashcardService.deleteFlashcard(
