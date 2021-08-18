@@ -50,10 +50,4 @@ export class UsersController {
       createUserDto.name,
     );
   }
-
-  @Post('test')
-  @UseGuards(AuthGuard())
-  test(@Req() req) {
-    console.log('from test api', req.user);
-  }
 }

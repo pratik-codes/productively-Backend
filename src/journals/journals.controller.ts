@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AddJournalDto } from './dtos/AddJournal.dto';
+import { EditJournalDto } from './dtos/editJournal.dto';
 import { JournalGroupDto } from './dtos/journalGroup.dto';
 import { UpdateJournalDetailsDto } from './dtos/updateJournalGroup.dto';
 import { JournalsService } from './journals.service';
@@ -71,6 +72,30 @@ export class JournalsController {
   }
 
   /**
+   * Function that updates a Journal details
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {JournalGroupId} string contains Journal group id to which the details needs to be updated
+   * @param    {JournalId} string contains Journal group id to which the details needs to be updated
+   * @param    {editJournalDto} EditJournalDto contains Journal  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Patch('journal')
+  async updateJournalDetails(
+    @Req() req,
+    @Body('JournalGroupId') JournalGroupId: string,
+    @Body('JournalId') JournalId: string,
+    @Body('JournalGroupDto') editJournalDto: EditJournalDto,
+  ) {
+    return await this.journalService.editJournalDetails(
+      req.user._id,
+      JournalGroupId,
+      JournalId,
+      editJournalDto,
+    );
+  }
+
+  /**
    * Function that adds a journal to a journal group
    * @author   Pratik Tiwari
    * @param    {Req} request the http request by the clients
@@ -78,7 +103,7 @@ export class JournalsController {
    * @param    {addJournalsDto} AddJournalDto contains data of the journals that needs to be added
    * @return   {BasicResponse} statusCode and messages
    */
-  @Patch('journal')
+  @Post('journal')
   async AddJournals(
     @Req() req,
     @Body('JournalGroupId') JournalGroupId: string,
@@ -123,7 +148,6 @@ export class JournalsController {
     @Param('journalGroupId') journalGroupId: string,
     @Param('journalId') journalId: string,
   ) {
-    console.log(journalId);
     return await this.journalService.deleteJournal(
       req.user._id,
       journalGroupId,

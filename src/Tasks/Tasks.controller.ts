@@ -4,6 +4,8 @@ import { Body } from '@nestjs/common';
 import { Get } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { Console } from 'console';
+import { EditTaskDto } from './Dtos/editTask.dto';
 import { TaskGroupDto } from './Dtos/TaskGroup-dto';
 import { UpdateTaskDetailsDto } from './Dtos/updateTaskDetails.dto';
 import { UpdateTasksTaskDto } from './Dtos/updateTasksTaskGroup.dto';
@@ -34,7 +36,6 @@ export class TasksController {
    */
   @Post('')
   async createTaskGroup(@Req() req, @Body() taskGroupDto: TaskGroupDto) {
-    console.log(taskGroupDto);
     return await this.tasksService.createTask(req.user._id, taskGroupDto);
   }
 
@@ -60,6 +61,51 @@ export class TasksController {
   }
 
   /**
+   * Function that updates a Task details
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {TaskGroupId} string contains Task group id to which the details needs to be updated
+   * @param    {TaskId} string contains Task group id to which the details needs to be updated
+   * @param    {editTaskDto} EditTaskDto contains Task  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Patch('task')
+  async updateTaskDetails(
+    @Req() req,
+    @Body('TaskId') TaskId: string,
+    @Body('TaskGroupId') TaskGroupId: string,
+    @Body('TaskGroupDto') editTaskDto: EditTaskDto,
+  ) {
+    return await this.tasksService.editTaskDetails(
+      req.user._id,
+      TaskGroupId,
+      TaskId,
+      editTaskDto,
+    );
+  }
+
+  /**
+   * Function that updates a Task to done status
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {TaskGroupId} string contains Task group id to which the details needs to be updated
+   * @param    {TaskId} string contains Task group id to which the details needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Patch('task/done')
+  async markTaskDone(
+    @Req() req,
+    @Body('TaskGroupId') TaskGroupId: string,
+    @Body('TaskId') TaskId: string,
+  ) {
+    return await this.tasksService.updateTaskDone(
+      req.user._id,
+      TaskGroupId,
+      TaskId,
+    );
+  }
+
+  /**
    * Function that creates a new task inside a task group
    * @author   Pratik Tiwari
    * @param    {Req} request the http request by the clients
@@ -67,8 +113,8 @@ export class TasksController {
    * @param    {updateTasksTaskDto} UpdateTasksTaskDto contains task data that needs to be added
    * @return   {BasicResponse} statusCode and messages
    */
-  @Patch('tasks')
-  async uodateTasksInTaskGroup(
+  @Post('tasks')
+  async updateTasksInTaskGroup(
     @Req() req,
     @Body('TaskGroupId') TaskGroupId: string,
     @Body() updateTasksTaskDto: UpdateTasksTaskDto,
@@ -93,7 +139,7 @@ export class TasksController {
   }
 
   /**
-   * Function that delete a task group
+   * Function that delete a task
    * @author   Pratik Tiwari
    * @param    {Req} request the http request by the clients
    * @param    {TaskGroupId} TaskGroupId contains task group id to in which the task exists
@@ -106,7 +152,6 @@ export class TasksController {
     @Param('TaskGroupId') TaskGroupId: string,
     @Param('TaskId') TaskId: string,
   ) {
-    console.log(TaskId);
     return await this.tasksService.deleteTask(
       req.user._id,
       TaskGroupId,

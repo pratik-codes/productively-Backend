@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
+import { EditTaskDto } from './Dtos/editTask.dto';
 import { TaskGroupDto } from './Dtos/TaskGroup-dto';
 import { UpdateTaskDetailsDto } from './Dtos/updateTaskDetails.dto';
 import { UpdateTasksTaskDto } from './Dtos/updateTasksTaskGroup.dto';
@@ -46,8 +47,6 @@ export class TasksService {
    * @return   {BasicResponse} statusCode and messages
    */
   async createTask(user: string, taskGroupDto: TaskGroupDto) {
-    console.log(taskGroupDto);
-
     return await this.taskGroupRepository.create(user, taskGroupDto);
   }
 
@@ -94,6 +93,45 @@ export class TasksService {
       user,
       taskGroupId,
       TasksData,
+    );
+  }
+
+  /**
+   * Function that updates a Task details
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {TaskGroupId} string contains Task group id to which the details needs to be updated
+   * @param    {TaskId} string contains Task group id to which the details needs to be updated
+   * @param    {editTaskDto} EditTaskDto contains Task  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async editTaskDetails(
+    user: string,
+    TaskGroupId: string,
+    TaskId: string,
+    editTaskDto: EditTaskDto,
+  ) {
+    return await this.taskGroupRepository.updateTaskDetails(
+      user,
+      TaskGroupId,
+      TaskId,
+      editTaskDto,
+    );
+  }
+
+  /**
+   * Function that updates a Task to done status
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {TaskGroupId} string contains Task group id to which the details needs to be updated
+   * @param    {TaskId} string contains Task group id to which the details needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async updateTaskDone(user: string, TaskGroupId: string, TaskId: string) {
+    return await this.taskGroupRepository.updateTaskDone(
+      user,
+      TaskGroupId,
+      TaskId,
     );
   }
 

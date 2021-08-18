@@ -1,6 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
-import { IsEmail, IsNotEmpty, IsOptional, Validate } from 'class-validator';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  Validate,
+} from 'class-validator';
 import { User } from 'src/users/schemas/user.schema';
 
 export enum TaskStatusEnum {
@@ -19,6 +25,7 @@ export class Task {
   @Prop()
   taskDescription: string;
 
+  @IsEnum(TaskStatusEnum)
   @Prop()
   tasksStatus: TaskStatusEnum;
 }

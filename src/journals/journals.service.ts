@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { EditFlashcardDto } from 'src/flashcard/Dtos/editFlashcard.dto';
 import { AddJournalDto } from './dtos/AddJournal.dto';
+import { EditJournalDto } from './dtos/editJournal.dto';
 import { JournalGroupDto } from './dtos/journalGroup.dto';
 import { UpdateJournalDetailsDto } from './dtos/updateJournalGroup.dto';
 import { journalGroupRepository } from './journals.repository';
@@ -40,6 +42,29 @@ export class JournalsService {
   }
 
   /**
+   * Function that updates a Journal details
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {JournalGroupId} string contains Journal group id to which the details needs to be updated
+   * @param    {JournalId} string contains Journal group id to which the details needs to be updated
+   * @param    {editJournalDto} EditJournalDto contains Journal  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async editJournalDetails(
+    user: string,
+    JournalGroupId: string,
+    JournalId: string,
+    editJournalDto: EditJournalDto,
+  ) {
+    return await this.journalGroupRepository.updateJournalDetails(
+      user,
+      JournalGroupId,
+      JournalId,
+      editJournalDto,
+    );
+  }
+
+  /**
    * Function that update a journal group details
    * @author   Pratik Tiwari
    * @param    {user} userId contains object id of the user
@@ -52,7 +77,6 @@ export class JournalsService {
     journalGroupId: string,
     updateTaskDetailsDto: UpdateJournalDetailsDto,
   ) {
-    console.log(journalGroupId);
     return await this.journalGroupRepository.updateJournalGroupDetails(
       user,
       journalGroupId,
@@ -73,7 +97,6 @@ export class JournalsService {
     journalGroupId: string,
     addJournalsDto: AddJournalDto,
   ) {
-    console.log(journalGroupId);
     return await this.journalGroupRepository.addJournals(
       user,
       journalGroupId,
