@@ -1,8 +1,13 @@
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { BasicResponse } from 'src/Types/TaskGroup.types';
+import { EditTaskDto } from './Dtos/editTask.dto';
 import { TaskGroupDto } from './Dtos/TaskGroup-dto';
 import { UpdateTaskDetailsDto } from './Dtos/updateTaskDetails.dto';
 import { UpdateTasksTaskDto } from './Dtos/updateTasksTaskGroup.dto';
@@ -35,7 +40,6 @@ export class TaskGroupRepository {
   async find(usersFilterQuery: FilterQuery<TaskGroup>): Promise<TaskGroup[]> {
     return this.taskGroupModel.find(usersFilterQuery);
   }
-  a;
   /**
    * Function that creates a new task group
    * @author   Pratik Tiwari
@@ -50,7 +54,7 @@ export class TaskGroupRepository {
       groupDescription: taskGroup.groupDescription,
     };
     const newTask = new this.taskGroupModel(taskData);
-    console.log(newTask);
+    console.log(taskData);
 
     try {
       newTask.save();
@@ -80,6 +84,106 @@ export class TaskGroupRepository {
     try {
       taskData.save();
       return { statusCode: 201, message: 'tasks were successfully added' };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
+   * Function that updates a Task details
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {TaskGroupId} string contains Task group id to which the details needs to be updated
+   * @param    {TaskId} string contains Task group id to which the details needs to be updated
+   * @param    {editTaskDto} EditTaskDto contains Task  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async updateTaskDetails(
+    user: string,
+    TaskGroupId: string,
+    TaskId: string,
+    editTaskDto: EditTaskDto,
+  ) {
+    const TaskData = await this.taskGroupModel.findOne({
+      _id: TaskGroupId,
+    });
+    console.log(TaskData);
+    let updateObject;
+    if (!TaskData) throw new NotFoundException();
+
+    // remove the Task the needs to be changed
+    const Tasks = [];
+    TaskData.Tasks.map(Task => {
+      if (Task.taskId === TaskId) {
+        console.log('found similar', Task);
+      }
+      if (Task.taskId !== TaskId) {
+        console.log('from if statement', Task);
+
+        Tasks.push(Task);
+        console.log(Task);
+      } else {
+        console.log('from else', Task);
+        updateObject = Task;
+      }
+    });
+    // change the details and push it back
+    console.log(updateObject);
+    Tasks.push({
+      taskId: updateObject.taskId,
+      taskName: editTaskDto.taskName,
+      taskDescription: editTaskDto.taskDescription,
+      tasksStatus: updateObject.tasksStatus,
+    });
+    // put it back in the object and save it
+    TaskData.Tasks = Tasks;
+    try {
+      TaskData.save();
+      return { statusCode: 201, message: 'Task was successfully updated' };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
+   * Function that updates a Task details
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {TaskGroupId} string contains Task group id to which the details needs to be updated
+   * @param    {TaskId} string contains Task group id to which the details needs to be updated
+   * @param    {editTaskDto} EditTaskDto contains Task  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async updateTaskDone(user: string, TaskGroupId: string, TaskId: string) {
+    const TaskData = await this.taskGroupModel.findOne({
+      _id: TaskGroupId,
+    });
+    let updateObject;
+    if (!TaskData) throw new NotFoundException();
+
+    // remove the Task the needs to be changed
+    const Tasks = [];
+    TaskData.Tasks.map(Task => {
+      if (Task.taskId !== TaskId) {
+        Tasks.push(Task);
+      } else {
+        if (Task.tasksStatus === 'DONE')
+          throw new BadRequestException('task is already done');
+        updateObject = Task;
+      }
+    });
+    // change the details and push it back
+    Tasks.push({
+      taskId: updateObject.taskId,
+      taskName: updateObject.taskName,
+      taskDescription: updateObject.taskDescription,
+      tasksStatus: 'DONE',
+    });
+    // put it back in the object and save it
+    TaskData.Tasks = Tasks;
+    try {
+      TaskData.save();
+      return { statusCode: 201, message: 'Task was successfully updated' };
     } catch (error) {
       return error;
     }

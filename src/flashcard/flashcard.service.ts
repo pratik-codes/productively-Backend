@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AddFlashCardDto } from './Dtos/AddFlashCard.dto';
+import { EditFlashcardDto } from './Dtos/editFlashcard.dto';
 import { FlashcardGroupDto } from './Dtos/flashcardgroup.dto';
 import { FlashcardGroupRepository } from './flashcard.repository';
 
@@ -44,11 +45,56 @@ export class FlashcardService {
     FlashcardGroupId: string,
     flashcardGroupDto: FlashcardGroupDto,
   ) {
-    console.log(FlashcardGroupId);
     return await this.flashcardGroupRepository.updateFlashcardGroupDetails(
       user,
       FlashcardGroupId,
       flashcardGroupDto,
+    );
+  }
+
+  /**
+   * Function that updates a Flashcard details
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {FlashcardGroupId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {FlashcardId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {editFlashcardDto} EditFlashcardDto contains Flashcard  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async editFlashcardDetails(
+    user: string,
+    FlashcardGroupId: string,
+    flashcardId: string,
+    editFlashcardDto: EditFlashcardDto,
+  ) {
+    return await this.flashcardGroupRepository.updateFlashcardDetails(
+      user,
+      FlashcardGroupId,
+      flashcardId,
+      editFlashcardDto,
+    );
+  }
+
+  /**
+   * Function that updates a Flashcard data
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {FlashcardGroupId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {FlashcardId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {data} string contains Flashcard  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async editFlashcardData(
+    user: string,
+    FlashcardGroupId: string,
+    FlashcardId: string,
+    data: string,
+  ) {
+    return await this.flashcardGroupRepository.updateFlashcardData(
+      user,
+      FlashcardGroupId,
+      FlashcardId,
+      data,
     );
   }
 
@@ -65,7 +111,6 @@ export class FlashcardService {
     FlashcardGroupId: string,
     addFlashCardDto: AddFlashCardDto,
   ) {
-    console.log(FlashcardGroupId);
     return await this.flashcardGroupRepository.addFlashcards(
       user,
       FlashcardGroupId,
