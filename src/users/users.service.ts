@@ -64,7 +64,6 @@ export class UsersService {
   ): Promise<LoginResponse | ErrorResponse> {
     // getting the user
     const user = await this.usersRepository.findOne({ email });
-    console.log(user);
     if (user) {
       // if correct password
       // creating payload

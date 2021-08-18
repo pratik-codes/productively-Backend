@@ -10,6 +10,7 @@ import {
 } from './Schema/flashcardgroup.schema';
 import { FlashcardGroupDto } from './Dtos/flashcardgroup.dto';
 import { AddFlashCardDto } from './Dtos/AddFlashCard.dto';
+import { EditFlashcardDto } from './Dtos/editFlashcard.dto';
 
 @Injectable()
 export class FlashcardGroupRepository {
@@ -129,6 +130,100 @@ export class FlashcardGroupRepository {
   }
 
   /**
+   * Function that updates a Flashcard details
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {FlashcardGroupId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {FlashcardId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {editFlashcardDto} EditFlashcardDto contains Flashcard  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async updateFlashcardDetails(
+    user: string,
+    FlashcardGroupId: string,
+    flashcardId: string,
+    editFlashcardDto: EditFlashcardDto,
+  ) {
+    const FlashcardData = await this.FlashcardModel.findOne({
+      _id: FlashcardGroupId,
+    });
+    let updateObject;
+    if (!FlashcardData) throw new NotFoundException();
+
+    // remove the flashcard the needs to be changed
+    const flashcards = [];
+    FlashcardData.flashcard.map(flashcard => {
+      if (flashcard.flashcardId !== flashcardId) {
+        flashcards.push(flashcard);
+      } else {
+        updateObject = flashcard;
+      }
+    });
+    // change the details and push it back
+    flashcards.push({
+      flashcardId: updateObject.flashcardId,
+      flashcardName: editFlashcardDto.flashcardName,
+      flashcardDescription: editFlashcardDto.flashcardDescription,
+      data: updateObject.data,
+    });
+    // put it back in the object and save it
+    FlashcardData.flashcard = flashcards;
+    try {
+      FlashcardData.save();
+      return { statusCode: 201, message: 'tasks was successfully updated' };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
+   * Function that updates a Flashcard data
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {FlashcardGroupId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {FlashcardId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {data} string contains Flashcard  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async updateFlashcardData(
+    user: string,
+    FlashcardGroupId: string,
+    FlashcardId: string,
+    data: string,
+  ) {
+    const FlashcardData = await this.FlashcardModel.findOne({
+      _id: FlashcardGroupId,
+    });
+    let updateObject;
+    if (!FlashcardData) throw new NotFoundException();
+
+    // remove the flashcard the needs to be changed
+    const flashcards = [];
+    FlashcardData.flashcard.map(flashcard => {
+      if (flashcard.flashcardId !== FlashcardId) {
+        flashcards.push(flashcard);
+      } else {
+        updateObject = flashcard;
+      }
+    });
+    // change the details and push it back
+    flashcards.push({
+      flashcardId: updateObject.flashcardId,
+      flashcardName: updateObject.flashcardName,
+      flashcardDescription: updateObject.flashcardDescription,
+      data: data,
+    });
+    // put it back in the object and save it
+    FlashcardData.flashcard = flashcards;
+    try {
+      FlashcardData.save();
+      return { statusCode: 201, message: 'tasks was successfully updated' };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
    * Function that deletes  a Flashcard group
    * @author   Pratik Tiwari
    * @param    {user} userId contains object id of the user
@@ -168,7 +263,6 @@ export class FlashcardGroupRepository {
     FlashcardGroupId: string,
     FlashcardId: string,
   ): Promise<BasicResponse> {
-    console.log(FlashcardGroupId, FlashcardId);
     const FlashcardData = await this.FlashcardModel.findOne({
       _id: FlashcardGroupId,
     });

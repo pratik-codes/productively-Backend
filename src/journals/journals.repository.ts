@@ -12,6 +12,7 @@ import {
   JournalGroup,
   JournalGroupDocument,
 } from './Schema/Journalgroup.schema';
+import { EditJournalDto } from './dtos/editJournal.dto';
 
 @Injectable()
 export class journalGroupRepository {
@@ -135,6 +136,57 @@ export class journalGroupRepository {
   }
 
   /**
+   * Function that updates a Journal details
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {JournalGroupId} string contains Journal group id to which the details needs to be updated
+   * @param    {JournalId} string contains Journal group id to which the details needs to be updated
+   * @param    {editJournalDto} EditJournalDto contains Journal  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async updateJournalDetails(
+    user: string,
+    JournalGroupId: string,
+    JournalId: string,
+    editJournalDto: EditJournalDto,
+  ) {
+    const JournalData = await this.journalModel.findOne({
+      _id: JournalGroupId,
+    });
+    let updateObject;
+    if (!JournalData) throw new NotFoundException();
+
+    // remove the Journal the needs to be changed
+    const Journals = [];
+    JournalData.Journals.map(Journal => {
+      if (Journal.journalId !== JournalId) {
+        Journals.push(Journal);
+      } else {
+        updateObject = Journal;
+      }
+    });
+    // change the details and push it back
+    Journals.push({
+      journalId: updateObject.journalId,
+      journalName: editJournalDto.journalName,
+      journalDescription: editJournalDto.journalDescription,
+      journalDate: updateObject.journalDate,
+      ans1: editJournalDto.ans1,
+      ans2: editJournalDto.ans2,
+      ans3: editJournalDto.ans3,
+      ans4: editJournalDto.ans4,
+    });
+    // put it back in the object and save it
+    JournalData.Journals = Journals;
+    try {
+      JournalData.save();
+      return { statusCode: 201, message: 'Journal was successfully updated' };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
    * Function that deletes  a journal group
    * @author   Pratik Tiwari
    * @param    {user} userId contains object id of the user
@@ -171,7 +223,6 @@ export class journalGroupRepository {
     journalGroupId: string,
     journalId: string,
   ): Promise<BasicResponse> {
-    console.log(journalGroupId, journalId);
     const journalData = await this.journalModel.findOne({
       _id: journalGroupId,
     });

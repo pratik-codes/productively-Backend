@@ -11,6 +11,7 @@ import {
 import { Controller } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AddFlashCardDto } from './Dtos/AddFlashCard.dto';
+import { EditFlashcardDto } from './Dtos/editFlashcard.dto';
 import { FlashcardGroupDto } from './Dtos/flashcardgroup.dto';
 import { FlashcardService } from './flashcard.service';
 
@@ -70,6 +71,54 @@ export class FlashcardController {
   }
 
   /**
+   * Function that updates a Flashcard details
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {FlashcardGroupId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {FlashcardId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {editFlashcardDto} EditFlashcardDto contains Flashcard  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Patch('card')
+  async updateFlashcardDetails(
+    @Req() req,
+    @Body('FlashcardGroupId') FlashcardGroupId: string,
+    @Body('FlashcardId') FlashcardId: string,
+    @Body('FlashcardGroupDto') editFlashcardDto: EditFlashcardDto,
+  ) {
+    return await this.flashcardService.editFlashcardDetails(
+      req.user._id,
+      FlashcardGroupId,
+      FlashcardId,
+      editFlashcardDto,
+    );
+  }
+
+  /**
+   * Function that updates a Flashcard data
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {FlashcardGroupId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {FlashcardId} string contains Flashcard group id to which the details needs to be updated
+   * @param    {data} string contains Flashcard  details that needs to be updated
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Patch('card/data')
+  async updateFlashcardData(
+    @Req() req,
+    @Body('FlashcardGroupId') FlashcardGroupId: string,
+    @Body('FlashcardId') FlashcardId: string,
+    @Body('data') data: string,
+  ) {
+    return await this.flashcardService.editFlashcardData(
+      req.user._id,
+      FlashcardGroupId,
+      FlashcardId,
+      data,
+    );
+  }
+
+  /**
    * Function that adds a Flashcard to a Flashcard group
    * @author   Pratik Tiwari
    * @param    {Req} request the http request by the clients
@@ -77,7 +126,7 @@ export class FlashcardController {
    * @param    {addFlashcardsDto} AddFlashcardDto contains data of the Flashcards that needs to be added
    * @return   {BasicResponse} statusCode and messages
    */
-  @Patch('card')
+  @Post('card')
   async AddFlashcards(
     @Req() req,
     @Body('FlashcardGroupId') FlashcardGroupId: string,
@@ -122,7 +171,6 @@ export class FlashcardController {
     @Param('FlashcardGroupId') FlashcardGroupId: string,
     @Param('FlashcardId') FlashcardId: string,
   ) {
-    console.log(FlashcardId);
     return await this.flashcardService.deleteFlashcard(
       req.user._id,
       FlashcardGroupId,
