@@ -74,4 +74,16 @@ export class RemainderController {
       remainderId,
     );
   }
+
+  /**
+   * Function that delete a remainder
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {remainderIds} Array<string> contains remainder  ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Post('/delete')
+  async deleteMultipleRemainders(@Body('remainderIds') remainderIds: string[]) {
+    return await this.remainderService.deleteMultipleRemainders(remainderIds);
+  }
 }

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  HttpStatus,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -54,7 +55,6 @@ export class TaskGroupRepository {
       groupDescription: taskGroup.groupDescription,
     };
     const newTask = new this.taskGroupModel(taskData);
-    console.log(taskData);
 
     try {
       newTask.save();
@@ -107,23 +107,15 @@ export class TaskGroupRepository {
     const TaskData = await this.taskGroupModel.findOne({
       _id: TaskGroupId,
     });
-    console.log(TaskData);
     let updateObject;
     if (!TaskData) throw new NotFoundException();
 
     // remove the Task the needs to be changed
     const Tasks = [];
     TaskData.Tasks.map(Task => {
-      if (Task.taskId === TaskId) {
-        console.log('found similar', Task);
-      }
       if (Task.taskId !== TaskId) {
-        console.log('from if statement', Task);
-
         Tasks.push(Task);
-        console.log(Task);
       } else {
-        console.log('from else', Task);
         updateObject = Task;
       }
     });
@@ -261,6 +253,63 @@ export class TaskGroupRepository {
     try {
       taskData.save();
       return { statusCode: 200, message: 'taskgroup deleted successfully' };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
+   * Function that delete a tasks group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {tasksGroupIds} Array<string> contains tasks group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultipletasksGroups(tasksGroupIds: string[]) {
+    // checking and sending error if any groups isnt present
+    try {
+      const tasksGroup = await this.taskGroupModel.find({
+        _id: tasksGroupIds,
+      });
+    } catch (error) {
+      return error;
+    }
+
+    // deleting all the group
+    try {
+      await this.taskGroupModel.deleteMany({ _id: tasksGroupIds });
+    } catch (error) {
+      return error;
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'tasks groups deleted successfully',
+    };
+  }
+
+  /**
+   * Function that delete all the taskss id that are mentioned
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {tasksGroupId} string contains tasks group ids that needs to be deleted
+   * @param    {tasksIds} Array<string> contains tasks group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultipletasks(tasksGroupId: string, tasksIds: string[]) {
+    const tasksGroup = await this.taskGroupModel.findOne({
+      _id: tasksGroupId,
+    });
+    const filteredtasks = tasksGroup.Tasks.filter(tasks => {
+      return !tasksIds.includes(tasks.taskId);
+    });
+    tasksGroup.Tasks = filteredtasks;
+    try {
+      tasksGroup.save();
+      return {
+        statusCode: 200,
+        message: 'tasks group deleted successfully',
+      };
     } catch (error) {
       return error;
     }

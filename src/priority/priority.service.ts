@@ -59,4 +59,15 @@ export class PriorityService {
   async deletePriority(userId: string, PriorityId: string) {
     return await this.priorityRepository.deletePriority(userId, PriorityId);
   }
+
+  /**
+   * Function that delete a priority
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {priorityIds} Array<string> contains priority ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultiplePriority(priorityIds: string[]) {
+    return await this.priorityRepository.deleteMultiplePriority(priorityIds);
+  }
 }

@@ -1,4 +1,8 @@
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpStatus,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
@@ -103,5 +107,35 @@ export class RemainderRepository {
     } catch (error) {
       return error;
     }
+  }
+
+  /**
+   * Function that delete a remaidner
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {remainderIds} Array<string> contains remaidner ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultipleRemainders(remainderIds: string[]) {
+    // checking and sending error if anys isnt present
+    try {
+      const remainders = await this.RemainderModel.find({
+        _id: remainderIds,
+      });
+    } catch (error) {
+      return error;
+    }
+
+    // deleting all the
+    try {
+      await this.RemainderModel.deleteMany({ _id: remainderIds });
+    } catch (error) {
+      return error;
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'reminders deleted successfully',
+    };
   }
 }

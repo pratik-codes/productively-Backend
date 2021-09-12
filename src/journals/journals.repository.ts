@@ -1,4 +1,10 @@
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Body,
+  HttpStatus,
+  NotFoundException,
+  Post,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { v4 as uuidv4 } from 'uuid';
@@ -236,6 +242,65 @@ export class journalGroupRepository {
     try {
       journalData.save();
       return { statusCode: 200, message: 'journal group deleted successfully' };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
+   * Function that delete a journal group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {journalGroupIds} Array<string> contains journal group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultipleJournalGroups(journalGroupIds: string[]) {
+    // checking and sending error if any groups isnt present
+    try {
+      const journalGroup = await this.journalModel.find({
+        _id: journalGroupIds,
+      });
+    } catch (error) {
+      return error;
+    }
+
+    // deleting all the group
+    try {
+      await this.journalModel.deleteMany({ _id: journalGroupIds });
+    } catch (error) {
+      return error;
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'journal groups deleted successfully',
+    };
+  }
+
+  /**
+   * Function that delete all the journals id that are mentioned
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {journalGroupId} string contains journal group ids that needs to be deleted
+   * @param    {journalIds} Array<string> contains journal group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultiplejournal(journalGroupId: string, journalIds: string[]) {
+    const journalGroup = await this.journalModel.findOne({
+      _id: journalGroupId,
+    });
+    console.log('journal', journalGroup);
+    const filteredJournal = journalGroup.Journals.filter(journal => {
+      return !journalIds.includes(journal.journalId);
+    });
+    console.log(filteredJournal);
+    journalGroup.Journals = filteredJournal;
+    try {
+      journalGroup.save();
+      return {
+        statusCode: 200,
+        message: 'journals group deleted successfully',
+      };
     } catch (error) {
       return error;
     }

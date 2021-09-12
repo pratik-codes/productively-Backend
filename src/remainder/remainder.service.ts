@@ -22,8 +22,9 @@ export class RemainderService {
     const upcoming = [];
     const past = [];
     remainders.map(remainder => {
-      const remainderDate = new Date(remainder.remainderDate);
-      const currentDate = new Date();
+      const remainderDate = new Date(remainder.remainderDate).getDate();
+      const currentDate = new Date().getDate();
+
       if (remainderDate >= currentDate) {
         upcoming.push(remainder);
       } else {
@@ -82,5 +83,18 @@ export class RemainderService {
    */
   async deleteRemainder(userId: string, remainderId: string) {
     return await this.remainderRepository.deleteRemainder(userId, remainderId);
+  }
+
+  /**
+   * Function that delete a remainder
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {remainderIds} Array<string> contains remainder  ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultipleRemainders(remainderIds: string[]) {
+    return await this.remainderRepository.deleteMultipleRemainders(
+      remainderIds,
+    );
   }
 }

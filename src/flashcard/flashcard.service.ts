@@ -151,4 +151,35 @@ export class FlashcardService {
       FlashcardId,
     );
   }
+
+  /**
+   * Function that delete a Flashcard group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {flashcardGroupIds} Array<string> contains Flashcard group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultipleFlashcardGroups(flashcardGroupIds: string[]) {
+    return await this.flashcardGroupRepository.deleteMultipleFlashcardGroups(
+      flashcardGroupIds,
+    );
+  }
+
+  /**
+   * Function that delete all the flashcards id that are mentioned
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {flashcardGroupId} string contains Flashcard group ids that needs to be deleted
+   * @param    {flashcardIds} Array<string> contains Flashcard group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultipleFlashcard(
+    flashcardGroupId: string,
+    flashcardIds: string[],
+  ) {
+    return await this.flashcardGroupRepository.deleteMultipleFlashcard(
+      flashcardGroupId,
+      flashcardIds,
+    );
+  }
 }
