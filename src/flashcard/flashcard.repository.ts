@@ -1,4 +1,8 @@
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpStatus,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { v4 as uuidv4 } from 'uuid';
@@ -278,6 +282,66 @@ export class FlashcardGroupRepository {
       return {
         statusCode: 200,
         message: 'Flashcard group deleted successfully',
+      };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  /**
+   * Function that delete a Flashcard group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {flashcardGroupIds} Array<string> contains Flashcard group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultipleFlashcardGroups(flashcardGroupIds: string[]) {
+    // checking and sending error if any groups isnt present
+    try {
+      const FlashcardGroup = await this.FlashcardModel.find({
+        _id: flashcardGroupIds,
+      });
+    } catch (error) {
+      return error;
+    }
+
+    // deleting all the group
+    try {
+      await this.FlashcardModel.deleteMany({ _id: flashcardGroupIds });
+    } catch (error) {
+      return error;
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Flashcard groups deleted successfully',
+    };
+  }
+
+  /**
+   * Function that delete all the flashcards id that are mentioned
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {flashcardGroupId} string contains Flashcard group ids that needs to be deleted
+   * @param    {flashcardIds} Array<string> contains Flashcard group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultipleFlashcard(
+    flashcardGroupId: string,
+    flashcardIds: string[],
+  ) {
+    const FlashcardGroup = await this.FlashcardModel.findOne({
+      _id: flashcardGroupId,
+    });
+    const filteredFlashcard = FlashcardGroup.flashcard.filter(Flashcard => {
+      return !flashcardIds.includes(Flashcard.flashcardId);
+    });
+    FlashcardGroup.flashcard = filteredFlashcard;
+    try {
+      FlashcardGroup.save();
+      return {
+        statusCode: 200,
+        message: 'Flashcards group deleted successfully',
       };
     } catch (error) {
       return error;

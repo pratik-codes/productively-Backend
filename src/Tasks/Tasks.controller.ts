@@ -158,4 +158,32 @@ export class TasksController {
       TaskId,
     );
   }
+
+  /**
+   * Function that delete a task group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {taskGroupIds} Array<string> contains task group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Post('/delete')
+  async deleteMultipletaskGroups(@Body('taskGroupIds') taskGroupIds: string[]) {
+    return await this.tasksService.deleteMultipleTasksGroups(taskGroupIds);
+  }
+
+  /**
+   * Function that delete all the taskss id that are mentioned
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {tasksGroupId} string contains tasks group ids that needs to be deleted
+   * @param    {tasksIds} Array<string> contains tasks group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Post('/cards/delete')
+  async deleteMultipletasks(
+    @Body('tasksGroupId') tasksGroupId: string,
+    @Body('tasksIds') tasksIds: string[],
+  ) {
+    return await this.tasksService.deleteMultipleTasks(tasksGroupId, tasksIds);
+  }
 }

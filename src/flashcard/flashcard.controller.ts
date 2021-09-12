@@ -2,6 +2,7 @@ import {
   Body,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Patch,
   Post,
@@ -175,6 +176,41 @@ export class FlashcardController {
       req.user._id,
       FlashcardGroupId,
       FlashcardId,
+    );
+  }
+
+  /**
+   * Function that delete a Flashcard group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {flashcardGroupIds} Array<string> contains Flashcard group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Post('/delete')
+  async deleteMultipleFlashcardGroups(
+    @Body('flashcardGroupIds') flashcardGroupIds: string[],
+  ) {
+    return await this.flashcardService.deleteMultipleFlashcardGroups(
+      flashcardGroupIds,
+    );
+  }
+
+  /**
+   * Function that delete all the flashcards id that are mentioned
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {flashcardGroupId} string contains Flashcard group ids that needs to be deleted
+   * @param    {flashcardIds} Array<string> contains Flashcard group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Post('/cards/delete')
+  async deleteMultipleFlashcard(
+    @Body('flashcardGroupId') flashcardGroupId: string,
+    @Body('flashcardIds') flashcardIds: string[],
+  ) {
+    return await this.flashcardService.deleteMultipleFlashcard(
+      flashcardGroupId,
+      flashcardIds,
     );
   }
 }

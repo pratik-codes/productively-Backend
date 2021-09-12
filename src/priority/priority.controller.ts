@@ -73,4 +73,18 @@ export class PriorityController {
   async deletePriority(@Req() req, @Param('PriorityId') PriorityId: string) {
     return await this.priorityService.deletePriority(req.user._id, PriorityId);
   }
+
+  /**
+   * Function that delete a priority group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {priorityGroupIds} Array<string> contains priority group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  @Post('/delete')
+  async deleteMultiplePriorities(
+    @Body('prioritiesIds') prioritiesIds: string[],
+  ) {
+    return await this.priorityService.deleteMultiplePriority(prioritiesIds);
+  }
 }

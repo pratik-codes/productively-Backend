@@ -133,4 +133,32 @@ export class JournalsService {
       journalId,
     );
   }
+
+  /**
+   * Function that delete a journal group
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {journalGroupIds} Array<string> contains journal group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultipleJournalGroups(journalGroupIds: string[]) {
+    return await this.journalGroupRepository.deleteMultipleJournalGroups(
+      journalGroupIds,
+    );
+  }
+
+  /**
+   * Function that delete all the journals id that are mentioned
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {journalGroupId} string contains journal group ids that needs to be deleted
+   * @param    {journalIds} Array<string> contains journal group ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultipleJournal(journalGroupId: string, journalIds: string[]) {
+    return await this.journalGroupRepository.deleteMultiplejournal(
+      journalGroupId,
+      journalIds,
+    );
+  }
 }

@@ -1,4 +1,8 @@
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpStatus,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
@@ -101,5 +105,35 @@ export class PriorityRepository {
     } catch (error) {
       return error;
     }
+  }
+
+  /**
+   * Function that delete a priority
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @param    {priorityIds} Array<string> contains priority  ids that needs to be deleted
+   * @return   {BasicResponse} statusCode and messages
+   */
+  async deleteMultiplePriority(priorityIds: string[]) {
+    // checking and sending error if any s isnt present
+    try {
+      const priority = await this.PriorityModel.find({
+        _id: priorityIds,
+      });
+    } catch (error) {
+      return error;
+    }
+
+    // deleting all the
+    try {
+      await this.PriorityModel.deleteMany({ _id: priorityIds });
+    } catch (error) {
+      return error;
+    }
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'priority s deleted successfully',
+    };
   }
 }
