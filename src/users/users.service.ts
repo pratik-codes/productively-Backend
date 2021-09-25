@@ -19,7 +19,7 @@ export class UsersService {
     return await this.usersRepository.findOne({ userId });
   }
 
-  // to get user by id
+  // to get user by email
   async getUserByEmail(email: string): Promise<User> {
     return await this.usersRepository.findOne({ email });
   }
@@ -63,7 +63,7 @@ export class UsersService {
     password: string,
   ): Promise<LoginResponse | ErrorResponse> {
     // getting the user
-    const user = await this.usersRepository.findOne({ email });
+    const user: any = await this.usersRepository.findOne({ email });
     if (user) {
       // if correct password
       // creating payload
@@ -84,7 +84,15 @@ export class UsersService {
         return {
           statusCode: 200,
           message: 'correct password!',
-          data: { accessToken: accessToken },
+          data: {
+            accessToken: accessToken,
+            userData: {
+              _id: user._id,
+              name: user.name,
+              email: user.email,
+              createdAt: user.createdAt,
+            },
+          },
         };
       }
       // incorrect password
