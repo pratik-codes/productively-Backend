@@ -17,7 +17,7 @@ export class UsersRepository {
    * @param    {userFilterQuery} User any data of the User to filter the task group on
    * @return   {User} returns user
    */
-  async findOne(userFilterQuery: FilterQuery<User>): Promise<User> {
+  async findOne(userFilterQuery: FilterQuery<UserDocument>): Promise<User> {
     return this.userModel.findOne(userFilterQuery);
   }
 
@@ -27,7 +27,7 @@ export class UsersRepository {
    * @param    {userFilterQuery} User any data of the User to filter the task group on
    * @return   {User} returns user
    */
-  async find(usersFilterQuery: FilterQuery<User>): Promise<User[]> {
+  async find(usersFilterQuery: FilterQuery<UserDocument>): Promise<User[]> {
     return this.userModel.find(usersFilterQuery);
   }
 
@@ -53,7 +53,7 @@ export class UsersRepository {
    * @return   {User} returns user
    */
   async findOneAndUpdate(
-    userFilterQuery: FilterQuery<User>,
+    userFilterQuery: FilterQuery<UserDocument>,
     user: Partial<User>,
   ): Promise<User> {
     return this.userModel.findOneAndUpdate(userFilterQuery, user, {

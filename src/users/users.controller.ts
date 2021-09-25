@@ -9,7 +9,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { JwtAuthGuard } from 'src/auth/jwt-guard';
+import { JwtAuthGuard } from '../auth/jwt/jwt-guard';
+import { BasicResponse } from 'src/Types/TaskGroup.types';
+import { ContactUsDto } from '../contactus/dto/contactus.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/loginUser.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
