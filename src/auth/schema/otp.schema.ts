@@ -7,17 +7,17 @@ import {
   IsOptional,
   Validate,
 } from 'class-validator';
-export type OtpDocument = OptSchema & Document;
+export type OtpDocument = Otp & Document;
 
 export enum OtpAuthTypeEnum {
   FORGOT_PASSWORD,
 }
 
 @Schema()
-export class OptSchema {
+export class Otp {
   @Prop()
   @IsNotEmpty()
-  otp: string;
+  otp: number;
 
   @Prop()
   @IsNotEmpty()
@@ -41,4 +41,4 @@ export class OptSchema {
   valid: boolean;
 }
 
-export const OtpSchema = SchemaFactory.createForClass(OptSchema);
+export const OtpSchema = SchemaFactory.createForClass(Otp);

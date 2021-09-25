@@ -17,7 +17,7 @@ import { EmailerService } from './emailer.service';
         },
       },
       template: {
-        dir: process.cwd() + '/src/common/mailer/template/',
+        dir: process.cwd() + '/src/utility/emailer/template/',
         adapter: new HandlebarsAdapter(), // or new PugAdapter()
         options: {
           strict: true,
