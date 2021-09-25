@@ -1,11 +1,13 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
-import { JwtPayload } from './jwt-payload-interface';
+import { EmailerService } from 'src/utility/emailer/emailer.service';
+import { UsersService } from '../../users/users.service';
+import { JwtPayload } from '../jwt/jwt-payload-interface';
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
+    private emailerService: EmailerService,
     private jwtService: JwtService,
   ) {}
 
@@ -23,5 +25,15 @@ export class AuthService {
     } else {
       throw new UnauthorizedException();
     }
+  }
+
+  /**
+   * Function sends forgot password mail with jwt tokens
+   * @author   Pratik Tiwari
+   * @param    {email} string email of the user
+   * @return   {basic response} statuscode and messages
+   */
+  async sendForgotPasswordEmail(email: string) {
+    return await this.emailerService.sendEmail('pratik2018id@gmail.com');
   }
 }
