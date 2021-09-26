@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import * as dotenv from 'dotenv';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -14,11 +14,10 @@ import { FlashcardModule } from './flashcard/flashcard.module';
 import { ContactusModule } from './contactus/contactus.module';
 import { EmailerModule } from './utility/emailer/emailer.module';
 
+dotenv.config();
+
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     UsersModule,
     AuthModule,

@@ -1,12 +1,14 @@
 import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import * as dotenv from 'dotenv';
+
 import { EmailerController } from './emailer.controller';
 import { EmailerService } from './emailer.service';
 
+dotenv.config();
+
 @Module({
   imports: [
-    ConfigModule.forRoot(),
     MailerModule.forRoot({
       transport: {
         // Through Gmail services (remember to disbale secure apps in settings)
