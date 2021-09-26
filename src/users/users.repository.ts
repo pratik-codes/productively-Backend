@@ -1,6 +1,7 @@
 import { Logger, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
+import { BasicResponse } from 'src/Types/TaskGroup.types';
 
 import { User, UserDocument } from './schemas/user.schema';
 
@@ -59,5 +60,22 @@ export class UsersRepository {
     return this.userModel.findOneAndUpdate(userFilterQuery, user, {
       new: true,
     });
+  }
+
+  /**
+   * Function that finds a user and update the password
+   * @author   Pratik Tiwari
+   * @param    {userFilterQuery} FilterQuery<user> any data of the User
+   * @return   {User} returns user
+   */
+  async findOneAndUpdatePassword(
+    userFilterQuery: FilterQuery<UserDocument>,
+    newPassword: string,
+  ): Promise<BasicResponse> {
+    await this.userModel.findOneAndUpdate(userFilterQuery, {
+      encryptedPassword: newPassword,
+    });
+
+    return { statusCode: 201, message: 'Password update successfully.' };
   }
 }
