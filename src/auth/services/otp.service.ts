@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { BasicResponse } from 'src/Types/TaskGroup.types';
 import { UsersService } from 'src/users/users.service';
 import { EmailerService } from 'src/utility/emailer/emailer.service';
 import { OTPRepository } from '../otp.repository';
@@ -15,7 +20,7 @@ export class OTPService {
    * Function creates a otp record sends an email to the user for same
    * @author   Pratik Tiwari
    * @param    {email} string USER EMAIL
-   * @return   {User} returns statuscode and message
+   * @return   {basicResponse} returns status code and message Promise<basicResponse>
    */
   async sendForgotPasswordOtpEmail(email: string) {
     //send only if the user exsists
@@ -30,6 +35,7 @@ export class OTPService {
     await this.otpRepository.updatePastRecords({
       email: email,
       valid: true,
+      authType: 'FORGOT_PASSWORD',
     });
 
     // creating an otp record
@@ -51,9 +57,52 @@ export class OTPService {
       await this.otpRepository.updatePastRecords({
         email: email,
         valid: true,
+        authType: 'FORGOT_PASSWORD',
       });
     }, 300000);
 
     return { statusCode: '201', message: 'email sent!' };
+  }
+
+  /**
+   * Function that finds otp and validates if its correcot or not
+   * @author   Pratik Tiwari
+   * @param    {email} string<user> email id of the user
+   * @param    {OTP} number OTP the user want to validate
+   * @return   {basicResponse} returns status code and message Promise<basicResponse>
+   */
+  async validateOTP(email: string, OTP: number): Promise<BasicResponse> {
+    const OTPRecordsRes: Otp[] = await this.otpRepository.findRecords({
+      email: email,
+      valid: true,
+      authType: 'FORGOT_PASSWORD',
+    });
+
+    if (OTPRecordsRes[0].otp === OTP) {
+      // as the otp is correct it user will be forwarded to next step and hence this otp shouldnt bbe used any more hence making it invalid
+      await this.otpRepository.updatePastRecords({
+        email: email,
+        valid: true,
+        authType: 'FORGOT_PASSWORD',
+      });
+
+      return { statusCode: 200, message: 'correct otp!' };
+    }
+
+    throw new UnauthorizedException('wrong otp entered!');
+  }
+
+  /**
+   * Function that finds a user and update the password
+   * @author   Pratik Tiwari
+   * @param    {email} string<user> email id of the user
+   * @param    {newPassword} string<user> new password that the user wants to update
+   * @return   {basicResponse} returns status code and message Promise<basicResponse>
+   */
+  async updatePassword(
+    email: string,
+    newPassword: string,
+  ): Promise<BasicResponse> {
+    return await this.usersService.updateUserPassword(email, newPassword);
   }
 }

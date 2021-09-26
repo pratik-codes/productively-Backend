@@ -6,6 +6,7 @@ import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ErrorResponse, LoginResponse } from './types/reponse.types';
+import { BasicResponse } from 'src/Types/TaskGroup.types';
 
 @Injectable()
 export class UsersService {
@@ -100,6 +101,31 @@ export class UsersService {
     }
     // id user doesn't exists
     throw new BadRequestException('user doesnt exists.');
+  }
+
+  /**
+   * Function that finds a user and update the password
+   * @author   Pratik Tiwari
+   * @param    {userFilterQuery} FilterQuery<user> any data of the User
+   * @return   {User} returns user
+   */
+  async updateUserPassword(
+    email: string,
+    newPassword: string,
+  ): Promise<BasicResponse> {
+    const user: any = await this.usersRepository.findOne({ email: email });
+
+    const encryptedNewPassword = await this.hashPassword(
+      newPassword,
+      user.salt,
+    );
+
+    return await this.usersRepository.findOneAndUpdatePassword(
+      {
+        email: email,
+      },
+      encryptedNewPassword,
+    );
   }
 
   // helper method to hash the user password
