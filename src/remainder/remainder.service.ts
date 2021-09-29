@@ -22,8 +22,8 @@ export class RemainderService {
     const upcoming = [];
     const past = [];
     remainders.map(remainder => {
-      const remainderDate = new Date(remainder.remainderDate).getDate();
-      const currentDate = new Date().getDate();
+      const remainderDate = new Date(remainder.remainderDate);
+      const currentDate = new Date();
 
       if (remainderDate >= currentDate) {
         upcoming.push(remainder);

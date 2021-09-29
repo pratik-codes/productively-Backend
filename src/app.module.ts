@@ -13,6 +13,7 @@ import { PriorityModule } from './priority/priority.module';
 import { FlashcardModule } from './flashcard/flashcard.module';
 import { ContactusModule } from './contactus/contactus.module';
 import { EmailerModule } from './utility/emailer/emailer.module';
+import { FirebaseModule } from './firebase/firebase.module';
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ dotenv.config();
     FlashcardModule,
     ContactusModule,
     EmailerModule,
+    FirebaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
