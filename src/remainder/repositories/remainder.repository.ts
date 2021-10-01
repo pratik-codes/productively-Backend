@@ -7,8 +7,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model } from 'mongoose';
 import { BasicResponse } from 'src/Types/TaskGroup.types';
-import { CreateRemainderDto } from './Dtos/createRemainder.dto';
-import { Remainder, RemainderDocument } from './Schema/remainder.schema';
+import { CreateRemainderDto } from '../Dtos/createRemainder.dto';
+import { Remainder, RemainderDocument } from '../Schema/remainder.schema';
 
 @Injectable()
 export class RemainderRepository {

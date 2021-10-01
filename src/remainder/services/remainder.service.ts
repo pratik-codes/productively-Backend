@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRemainderDto } from './Dtos/createRemainder.dto';
-import { RemainderRepository } from './remainder.repository';
+import { CreateRemainderDto } from '../Dtos/createRemainder.dto';
+import { NotifyRemainderRepository } from '../repositories/notifyRemainder.repository';
+import { RemainderRepository } from '../repositories/remainder.repository';
 
 @Injectable()
 export class RemainderService {
-  constructor(private readonly remainderRepository: RemainderRepository) {}
+  constructor(
+    private readonly remainderRepository: RemainderRepository,
+    private readonly notifyRemainderRepository: NotifyRemainderRepository,
+  ) {}
 
   /**
    * Function that gets all the remainder
@@ -45,13 +49,27 @@ export class RemainderService {
     userId: string,
     createRemainderDto: CreateRemainderDto,
   ) {
+    // creating remainder that the user will see in the app
     const remainderData = {
       user: userId,
       remainderName: createRemainderDto.remainderName,
       remainderDescription: createRemainderDto.remainderDescription,
       remainderDate: createRemainderDto.date,
     };
-    return await this.remainderRepository.create(remainderData);
+
+    const res = await this.remainderRepository.create(remainderData);
+
+    // for cron job that send the notification
+    const notifyRemainderData = {
+      userId: userId,
+      remainderName: createRemainderDto.remainderName,
+      remainderDescription: createRemainderDto.remainderDescription,
+      remainderDate: new Date(createRemainderDto.date),
+    };
+
+    await this.notifyRemainderRepository.create(notifyRemainderData);
+
+    return res;
   }
 
   /**
