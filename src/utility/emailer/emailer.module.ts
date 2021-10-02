@@ -13,12 +13,18 @@ dotenv.config();
       transport: {
         // Through Gmail services (remember to disbale secure apps in settings)
         service: 'gmail',
+        port: 465,
+        secure: false,
         auth: {
+          type: 'OAuth2',
           user: 'noreply.productively@gmail.com',
-          pass: process.env.Mailer_Account_Password,
+          clientId: process.env.OAUTH_CLIENT_ID,
+          clientSecret: process.env.OAUTH_CLIENT_SECRET,
+          refreshToken: process.env.OAUTH_REFRESH_TOKEN,
           accessToken: process.env.OAUTH_ACCESS_TOKEN,
         },
         tls: {
+          // do not fail on invalid certs
           rejectUnauthorized: false,
         },
       },
