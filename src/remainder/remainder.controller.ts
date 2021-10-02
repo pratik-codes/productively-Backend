@@ -3,7 +3,7 @@ import { Body, Delete, Get, Patch, Post, UseGuards } from '@nestjs/common';
 import { Controller, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateRemainderDto } from './Dtos/createRemainder.dto';
-import { RemainderService } from './remainder.service';
+import { RemainderService } from './services/remainder.service';
 
 @Controller('remainder')
 @UseGuards(AuthGuard())

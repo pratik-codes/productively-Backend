@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRemainderDto } from './Dtos/createRemainder.dto';
-import { RemainderRepository } from './remainder.repository';
+import { CreateRemainderDto } from '../Dtos/createRemainder.dto';
+import { RemainderRepository } from '../repositories/remainder.repository';
 
 @Injectable()
 export class RemainderService {
@@ -45,12 +45,14 @@ export class RemainderService {
     userId: string,
     createRemainderDto: CreateRemainderDto,
   ) {
+    // creating remainder that the user will see in the app
     const remainderData = {
       user: userId,
       remainderName: createRemainderDto.remainderName,
       remainderDescription: createRemainderDto.remainderDescription,
       remainderDate: createRemainderDto.date,
     };
+
     return await this.remainderRepository.create(remainderData);
   }
 

@@ -7,6 +7,13 @@ import { ContactUsDto } from './dto/contactus.dto';
 export class ContactusService {
   constructor(private readonly contactUsRepository: ContactUsRepository) {}
 
+  /**
+   * Function that saves contact us response
+   * @author   Pratik Tiwari
+   * @param    {contactUsDto} ContactUsDto any data of the ContactUs
+   * @param    {userId} string user id
+   * @return   {User} returns basic response
+   */
   async saveContactUsResponse(contactUsDto: ContactUsDto, userId: string) {
     const { email, name, message } = contactUsDto;
 

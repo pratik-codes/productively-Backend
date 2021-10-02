@@ -16,6 +16,10 @@ dotenv.config();
         auth: {
           user: 'noreply.productively@gmail.com',
           pass: process.env.Mailer_Account_Password,
+          accessToken: process.env.OAUTH_ACCESS_TOKEN,
+        },
+        tls: {
+          rejectUnauthorized: false,
         },
       },
       template: {
