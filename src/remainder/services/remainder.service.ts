@@ -1,14 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRemainderDto } from '../Dtos/createRemainder.dto';
-import { NotifyRemainderRepository } from '../repositories/notifyRemainder.repository';
 import { RemainderRepository } from '../repositories/remainder.repository';
 
 @Injectable()
 export class RemainderService {
-  constructor(
-    private readonly remainderRepository: RemainderRepository,
-    private readonly notifyRemainderRepository: NotifyRemainderRepository,
-  ) {}
+  constructor(private readonly remainderRepository: RemainderRepository) {}
 
   /**
    * Function that gets all the remainder
@@ -57,19 +53,7 @@ export class RemainderService {
       remainderDate: createRemainderDto.date,
     };
 
-    const res = await this.remainderRepository.create(remainderData);
-
-    // for cron job that send the notification
-    const notifyRemainderData = {
-      userId: userId,
-      remainderName: createRemainderDto.remainderName,
-      remainderDescription: createRemainderDto.remainderDescription,
-      remainderDate: new Date(createRemainderDto.date),
-    };
-
-    await this.notifyRemainderRepository.create(notifyRemainderData);
-
-    return res;
+    return await this.remainderRepository.create(remainderData);
   }
 
   /**

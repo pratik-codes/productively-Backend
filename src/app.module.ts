@@ -20,7 +20,12 @@ dotenv.config();
 
 @Module({
   imports: [
-    MongooseModule.forRoot(process.env.MONGO_URI.toString()),
+    MongooseModule.forRoot(process.env.MONGO_URI.toString(), {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+      useFindAndModify: true,
+    }),
     ScheduleModule.forRoot(),
     UsersModule,
     AuthModule,
