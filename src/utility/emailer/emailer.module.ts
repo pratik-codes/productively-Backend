@@ -1,6 +1,8 @@
 import { HandlebarsAdapter, MailerModule } from '@nest-modules/mailer';
 import { Module } from '@nestjs/common';
 import * as dotenv from 'dotenv';
+import { google } from 'googleapis';
+const OAuth2 = google.auth.OAuth2;
 
 import { EmailerController } from './emailer.controller';
 import { EmailerService } from './emailer.service';
@@ -13,15 +15,12 @@ dotenv.config();
       transport: {
         // Through Gmail services (remember to disbale secure apps in settings)
         service: 'gmail',
-        port: 465,
+        port: 587,
         secure: false,
+        ignoreTLS: true,
         auth: {
-          type: 'OAuth2',
           user: 'noreply.productively@gmail.com',
-          clientId: process.env.OAUTH_CLIENT_ID,
-          clientSecret: process.env.OAUTH_CLIENT_SECRET,
-          refreshToken: process.env.OAUTH_REFRESH_TOKEN,
-          accessToken: process.env.OAUTH_ACCESS_TOKEN,
+          pass: process.env.Mailer_Account_Password,
         },
         tls: {
           // do not fail on invalid certs
@@ -41,4 +40,21 @@ dotenv.config();
   providers: [EmailerService],
   exports: [EmailerService],
 })
-export class EmailerModule {}
+export class EmailerModule {
+  constructor() {
+    // this.getAccessToken();
+  }
+
+  getAccessToken = async () => {
+    const oauth2Client = new OAuth2(
+      process.env.OAUTH_CLIENT_ID,
+      process.env.OAUTH_CLIENT_SECRET,
+      'https://developers.google.com/oauthplayground', // Redirect URL
+    );
+    oauth2Client.setCredentials({
+      refresh_token: process.env.OAUTH_REFRESH_TOKEN,
+    });
+    const accessToken = await oauth2Client.getAccessToken();
+    console.log(accessToken);
+  };
+}
