@@ -28,6 +28,17 @@ export class TasksController {
   }
 
   /**
+   * Function that return all tasks of a  task groups
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @return   {TaskGroup} List of task groups of the user
+   */
+  @Get('/:taskGroupId')
+  async getTasks(@Req() req, @Param('taskGroupId') taskGroupId: string) {
+    return await this.tasksService.getTasks(taskGroupId, req.user._id);
+  }
+
+  /**
    * Function that creates a new task group
    * @author   Pratik Tiwari
    * @param    {Req} request the http request by the clients

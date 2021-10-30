@@ -33,6 +33,17 @@ export class JournalsController {
   }
 
   /**
+   * Function that return all journals of a  journal groups
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @return   {JournalsGroup} List of Journals groups of the user
+   */
+  @Get('/:journalGroupId')
+  async getTasks(@Req() req, @Param('journalGroupId') journalGroupId: string) {
+    return await this.journalService.getJournals(journalGroupId, req.user._id);
+  }
+
+  /**
    * Function that creates a new journal group
    * @author   Pratik Tiwari
    * @param    {Req} request the http request by the clients

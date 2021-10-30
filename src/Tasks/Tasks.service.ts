@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { EditTaskDto } from './Dtos/editTask.dto';
 import { TaskGroupDto } from './Dtos/TaskGroup-dto';
@@ -40,6 +40,44 @@ export class TasksService {
   }
 
   /**
+   * Function that returns all the tasks of a task groups of a user
+   * @author   Pratik Tiwari
+   * @param    {user} userId contains object id of the user
+   * @param    {taskGroupId} userId contains object id of the user
+   * @return   {Task} returns all the task group of the user
+   */
+  async getTasks(taskGroupId: string, userId: string) {
+    const taskGroup: any = await this.taskGroupRepository.findOne({
+      _id: taskGroupId,
+    });
+
+    if (String(taskGroup.user) != String(userId)) {
+      throw new BadRequestException('This task doesnt belong to you ');
+    }
+
+    const doneTasks = [];
+    const pendingTasks = [];
+    taskGroup.Tasks.map(task => {
+      if (task.tasksStatus === 'PENDING') {
+        pendingTasks.push(task);
+      } else {
+        doneTasks.push(task);
+      }
+    });
+
+    return {
+      statusCode: 200,
+      id: taskGroup._id,
+      groupName: taskGroup.groupName,
+      groupDescription: taskGroup.groupDescription,
+      Tasks: {
+        done: doneTasks,
+        pending: pendingTasks,
+      },
+    };
+  }
+
+  /**
    * Function that creates a new task group
    * @author   Pratik Tiwari
    * @param    {user} userId contains object id of the user
@@ -50,14 +88,6 @@ export class TasksService {
     return await this.taskGroupRepository.create(user, taskGroupDto);
   }
 
-  /**
-   * Function that update a task group details
-   * @author   Pratik Tiwari
-   * @param    {user} userId contains object id of the user
-   * @param    {taskGroupId} string contains id of the task group that needs to be updated
-   * @param    {updateTaskDetailsDto} UpdateTaskDetailsDto contains data of the task group that is to be updated
-   * @return   {BasicResponse} statusCode and messages
-   */
   async updateTaskGroupDetails(
     user: string,
     taskGroupId: string,
