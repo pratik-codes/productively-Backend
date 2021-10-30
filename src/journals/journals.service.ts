@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { EditFlashcardDto } from 'src/flashcard/Dtos/editFlashcard.dto';
 import { AddJournalDto } from './dtos/AddJournal.dto';
 import { EditJournalDto } from './dtos/editJournal.dto';
@@ -28,6 +28,24 @@ export class JournalsService {
       });
     });
     return { statusCode: 200, data: journalGroups };
+  }
+
+  /**
+   * Function that return all jorunal of a  jorunal groups
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @return   {jorunalGroupId} List of jorunal groups of the user
+   */
+  async getJournals(jorunalGroupId: string, userId: string) {
+    const jorunalGroup: any = await this.journalGroupRepository.findOne({
+      _id: jorunalGroupId,
+    });
+
+    if (String(jorunalGroup.user) != String(userId)) {
+      throw new BadRequestException('This task doesnt belong to you ');
+    }
+
+    return { message: 'jorunal retrived successfully', data: jorunalGroup };
   }
 
   /**

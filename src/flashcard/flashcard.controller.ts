@@ -29,7 +29,24 @@ export class FlashcardController {
    */
   @Get('')
   async getFlashcards(@Req() req) {
-    return await this.flashcardService.getFlashcards(req.user._id);
+    return await this.flashcardService.getFlashcardGroups(req.user._id);
+  }
+
+  /**
+   * Function that return all flashcard of a  flashcard groups
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @return   {TaskGroup} List of flashcard groups of the user
+   */
+  @Get('/:flashcardGroupId')
+  async getTasks(
+    @Req() req,
+    @Param('flashcardGroupId') flashcardGroupId: string,
+  ) {
+    return await this.flashcardService.getFlashcards(
+      flashcardGroupId,
+      req.user._id,
+    );
   }
 
   /**

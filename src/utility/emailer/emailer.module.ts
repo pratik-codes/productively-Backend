@@ -19,7 +19,7 @@ dotenv.config();
         secure: false,
         ignoreTLS: true,
         auth: {
-          user: 'noreply.productively@gmail.com',
+          user: 'contact.productively@gmail.com',
           pass: process.env.Mailer_Account_Password,
         },
         tls: {

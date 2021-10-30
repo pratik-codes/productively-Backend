@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { AddFlashCardDto } from './Dtos/AddFlashCard.dto';
 import { EditFlashcardDto } from './Dtos/editFlashcard.dto';
 import { FlashcardGroupDto } from './Dtos/flashcardgroup.dto';
@@ -14,8 +14,26 @@ export class FlashcardService {
    * @param    {userId} string user id
    * @return   {FlashcardGroup[]} List of Flashcard group of the user
    */
-  async getFlashcards(userId: string) {
+  async getFlashcardGroups(userId: string) {
     return await this.flashcardGroupRepository.find({ user: userId });
+  }
+
+  /**
+   * Function that return all flashcard of a  flashcard groups
+   * @author   Pratik Tiwari
+   * @param    {Req} request the http request by the clients
+   * @return   {flashcardGroupId} List of flashcard groups of the user
+   */
+  async getFlashcards(flashcardGroupId: string, userId: string) {
+    const flashcardGroup: any = await this.flashcardGroupRepository.findOne({
+      _id: flashcardGroupId,
+    });
+
+    if (String(flashcardGroup.user) != String(userId)) {
+      throw new BadRequestException('This task doesnt belong to you ');
+    }
+
+    return { message: 'flashcard retrived successfully', data: flashcardGroup };
   }
 
   /**
